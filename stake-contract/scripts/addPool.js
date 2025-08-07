@@ -3,7 +3,8 @@ const { ethers } = require("hardhat");
 async function main() {
   // 连接到已部署的 YYStake 合约
   // 注意：你需要替换为实际部署的合约地址
-  const YYStake = await ethers.getContractAt("YYStake", "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0");
+  // 先运行 npx hardhat run scripts/deploy.js --network sepolia 后得到的地址: 0xcbE2a64e27bf8b0fdd024e389CfC0B82751A9181
+  const YYStake = await ethers.getContractAt("YYStake", "0xcbE2a64e27bf8b0fdd024e389CfC0B82751A9181");
 
   // 添加 ETH 质押池
   // 参数说明：

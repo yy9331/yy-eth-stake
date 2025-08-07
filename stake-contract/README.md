@@ -21,6 +21,7 @@ stake-contract/
 ├── scripts/
 │   ├── deploy.js           # 部署脚本
 │   ├── addPool.js          # 添加质押池脚本
+│   ├── getTokenAddress.js  # 获取合约地址脚本
 │   └── YYStake.js          # 备用部署脚本
 ├── test/
 │   ├── YYStake.test.js     # 基础功能测试
@@ -102,6 +103,23 @@ module.exports = {
 # 然后运行
 npx hardhat run scripts/addPool.js --network sepolia
 ```
+
+## 📍 获取合约地址
+
+部署完成后，可以使用以下命令获取合约地址：
+
+```bash
+# 获取 YYToken 和 YYStake 合约地址
+npx hardhat run scripts/getTokenAddress.js --network sepolia
+```
+
+输出示例：
+```
+YYToken 地址: 0x86c52d5fAFD11e88358CE2bf1a47cB5bB9db0D4D
+YYStake 地址: 0xcbE2a64e27bf8b0fdd024e389CfC0B82751A9181
+```
+
+**注意**: 部署脚本只会输出 YYStake 地址，使用 `getTokenAddress.js` 可以获取完整的合约地址信息。
 
 ## 📋 合约功能
 
