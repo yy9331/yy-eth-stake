@@ -1,14 +1,49 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-  const MetaNodeStake = await ethers.getContractAt("MetaNodeStake", "0xF136927bB54709e548fC77F7ee9947b5Ef3136ff");
+  // 连接到已部署的 YYStake 合约
+  // 注意：你需要替换为实际部署的合约地址
+  const YYStake = await ethers.getContractAt("YYStake", "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0");
 
-  // 用于本地测试: 本地跑了 npx hardhat node, 
-  // 接着运行了另一个终端跑了: npx hardhat run scripts/deploy.js --network localhost, 生成了部署在本地的合约0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
-  // const MetaNodeStake = await ethers.getContractAt("MetaNodeStake", "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
+  // 添加 ETH 质押池
+  // 参数说明：
+  // - ethers.ZeroAddress: ETH 池（地址为 0x0）
+  // - 500: 池子权重
+  // - ethers.parseEther("0.1"): 最小质押金额（0.1 ETH）
+  // - 20: 解质押锁定区块数
+  // - true: 立即更新池子
+  const pool = await YYStake.addPool(
+    ethers.ZeroAddress, 
+    500, 
+    ethers.parseEther("0.1"), 
+    20, 
+    true
+  );
   
-  const pool = await MetaNodeStake.addPool(ethers.ZeroAddress, 500, 100, 20, true);
-  console.log(pool);
+  console.log("Pool added successfully!");
+  console.log("Transaction hash:", pool.hash);
+  
+  // 等待交易确认
+  await pool.wait();
+  console.log("Transaction confirmed!");
+  
+  // 验证池子是否添加成功
+  const poolLength = await YYStake.poolLength();
+  console.log("Total pools:", poolLength.toString());
+  
+  // 获取池子信息
+  const poolInfo = await YYStake.pool(0);
+  console.log("Pool 0 info:", {
+    stTokenAddress: poolInfo[0],
+    poolWeight: poolInfo[1].toString(),
+    minDepositAmount: ethers.formatEther(poolInfo[5]),
+    unstakeLockedBlocks: poolInfo[6].toString()
+  });
 }
 
-main();
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

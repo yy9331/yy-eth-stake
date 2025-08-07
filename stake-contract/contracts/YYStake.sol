@@ -11,7 +11,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 
-contract MetaNodeStake is
+contract YYStake is
     Initializable,
     UUPSUpgradeable,
     PausableUpgradeable,
@@ -30,25 +30,25 @@ contract MetaNodeStake is
     
     // ************************************** DATA STRUCTURE **************************************
     /*
-    Basically, any point in time, the amount of MetaNodes entitled to a user but is pending to be distributed is:
+    Basically, any point in time, the amount of YY tokens entitled to a user but is pending to be distributed is:
 
-    pending MetaNode = (user.stAmount * pool.accMetaNodePerST) - user.finishedMetaNode
+    pending YY = (user.stAmount * pool.accYYPerST) - user.finishedYY
 
     Whenever a user deposits or withdraws staking tokens to a pool. Here's what happens:
-    1. The pool's `accMetaNodePerST` (and `lastRewardBlock`) gets updated.
-    2. User receives the pending MetaNode sent to his/her address.
+    1. The pool's `accYYPerST` (and `lastRewardBlock`) gets updated.
+    2. User receives the pending YY sent to his/her address.
     3. User's `stAmount` gets updated.
-    4. User's `finishedMetaNode` gets updated.
+    4. User's `finishedYY` gets updated.
     */
     struct Pool {
         // Address of staking token 质押代币的地址
         address stTokenAddress;
         // Weight of pool 不同资金池所占的权重
         uint256 poolWeight;
-        // Last block number that MetaNodes distribution occurs for pool 
+                // Last block number that YY tokens distribution occurs for pool
         uint256 lastRewardBlock;
-        // Accumulated MetaNodes per staking token of pool
-        uint256 accMetaNodePerST;
+        // Accumulated YY tokens per staking token of pool
+        uint256 accYYPerST;
         // Staking token amount
         uint256 stTokenAmount;
         // Min staking amount
@@ -67,29 +67,29 @@ contract MetaNodeStake is
     struct User {
         // Staking token amount that user provided
         uint256 stAmount;
-        // Finished distributed MetaNodes to user 最终 MetaNode 得到的数量
-        uint256 finishedMetaNode;
-        // Pending to claim MetaNodes 当前可取数量
-        uint256 pendingMetaNode;
+        // Finished distributed YY tokens to user 最终 YY 得到的数量
+            uint256 finishedYY;
+    // Pending to claim YY tokens 当前可取数量
+    uint256 pendingYY;
         // Withdraw request list
         UnstakeRequest[] requests;
     }
 
     // ************************************** STATE VARIABLES **************************************
-    // First block that MetaNodeStake will start from
+    // First block that YYStake will start from
     uint256 public startBlock;
-    // First block that MetaNodeStake will end from
+    // First block that YYStake will end from
     uint256 public endBlock;
-    // MetaNode token reward per block
-    uint256 public MetaNodePerBlock;
+    // YY token reward per block
+    uint256 public YYPerBlock;
 
     // Pause the withdraw function
     bool public withdrawPaused;
     // Pause the claim function
     bool public claimPaused;
 
-    // MetaNode token
-    IERC20 public MetaNode;
+    // YY token
+    IERC20 public YY;
 
     // Total pool weight / Sum of all pool weights
     uint256 public totalPoolWeight;
@@ -100,7 +100,7 @@ contract MetaNodeStake is
 
     // ************************************** EVENT **************************************
 
-    event SetMetaNode(IERC20 indexed MetaNode);
+    event SetYY(IERC20 indexed YY);
 
     event PauseWithdraw();
 
@@ -114,7 +114,7 @@ contract MetaNodeStake is
 
     event SetEndBlock(uint256 indexed endBlock);
 
-    event SetMetaNodePerBlock(uint256 indexed MetaNodePerBlock);
+    event SetYYPerBlock(uint256 indexed YYPerBlock);
 
     event AddPool(address indexed stTokenAddress, uint256 indexed poolWeight, uint256 indexed lastRewardBlock, uint256 minDepositAmount, uint256 unstakeLockedBlocks);
 
@@ -122,7 +122,7 @@ contract MetaNodeStake is
 
     event SetPoolWeight(uint256 indexed poolId, uint256 indexed poolWeight, uint256 totalPoolWeight);
 
-    event UpdatePool(uint256 indexed poolId, uint256 indexed lastRewardBlock, uint256 totalMetaNode);
+    event UpdatePool(uint256 indexed poolId, uint256 indexed lastRewardBlock, uint256 totalYY);
 
     event Deposit(address indexed user, uint256 indexed poolId, uint256 amount);
 
@@ -130,7 +130,7 @@ contract MetaNodeStake is
 
     event Withdraw(address indexed user, uint256 indexed poolId, uint256 amount, uint256 indexed blockNumber);
 
-    event Claim(address indexed user, uint256 indexed poolId, uint256 MetaNodeReward);
+    event Claim(address indexed user, uint256 indexed poolId, uint256 YYReward);
 
     // ************************************** MODIFIER **************************************
 
@@ -150,15 +150,15 @@ contract MetaNodeStake is
     }
 
     /**
-     * @notice Set MetaNode token address. Set basic info when deploying.
+     * @notice Set YY token address. Set basic info when deploying.
      */
     function initialize(
-        IERC20 _MetaNode,
-        uint256 _startBlock,
-        uint256 _endBlock,
-        uint256 _MetaNodePerBlock
+            IERC20 _YY,
+    uint256 _startBlock,
+    uint256 _endBlock,
+    uint256 _YYPerBlock
     ) public initializer {
-        require(_startBlock <= _endBlock && _MetaNodePerBlock > 0, "invalid parameters");
+        require(_startBlock <= _endBlock && _YYPerBlock > 0, "invalid parameters");
 
         __AccessControl_init();
         __UUPSUpgradeable_init();
@@ -166,11 +166,11 @@ contract MetaNodeStake is
         _grantRole(UPGRADE_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
 
-        setMetaNode(_MetaNode);
+        setYY(_YY);
 
         startBlock = _startBlock;
         endBlock = _endBlock;
-        MetaNodePerBlock = _MetaNodePerBlock;
+        YYPerBlock = _YYPerBlock;
 
     }
 
@@ -185,12 +185,12 @@ contract MetaNodeStake is
     // ************************************** ADMIN FUNCTION **************************************
 
     /**
-     * @notice Set MetaNode token address. Can only be called by admin
+     * @notice Set YY token address. Can only be called by admin
      */
-    function setMetaNode(IERC20 _MetaNode) public onlyRole(ADMIN_ROLE) {
-        MetaNode = _MetaNode;
+    function setYY(IERC20 _YY) public onlyRole(ADMIN_ROLE) {
+        YY = _YY;
 
-        emit SetMetaNode(MetaNode);
+        emit SetYY(YY);
     }
 
     /**
@@ -260,19 +260,19 @@ contract MetaNodeStake is
     }
 
     /**
-     * @notice Update the MetaNode reward amount per block. Can only be called by admin.
+     * @notice Update the YY reward amount per block. Can only be called by admin.
      */
-    function setMetaNodePerBlock(uint256 _MetaNodePerBlock) public onlyRole(ADMIN_ROLE) {
-        require(_MetaNodePerBlock > 0, "invalid parameter");
+    function setYYPerBlock(uint256 _YYPerBlock) public onlyRole(ADMIN_ROLE) {
+        require(_YYPerBlock > 0, "invalid parameter");
 
-        MetaNodePerBlock = _MetaNodePerBlock;
+        YYPerBlock = _YYPerBlock;
 
-        emit SetMetaNodePerBlock(_MetaNodePerBlock);
+        emit SetYYPerBlock(_YYPerBlock);
     }
 
     /**
      * @notice Add a new staking to pool. Can only be called by admin
-     * DO NOT add the same staking token more than once. MetaNode rewards will be messed up if you do
+     * DO NOT add the same staking token more than once. YY rewards will be messed up if you do
      */
     function addPool(address _stTokenAddress, uint256 _poolWeight, uint256 _minDepositAmount, uint256 _unstakeLockedBlocks,  bool _withUpdate) public onlyRole(ADMIN_ROLE) {
         // Default the first pool to be ETH pool, so the first pool must be added with stTokenAddress = address(0x0)
@@ -297,7 +297,7 @@ contract MetaNodeStake is
             stTokenAddress: _stTokenAddress,
             poolWeight: _poolWeight,
             lastRewardBlock: lastRewardBlock,
-            accMetaNodePerST: 0,
+            accYYPerST: 0,
             stTokenAmount: 0,
             minDepositAmount: _minDepositAmount,
             unstakeLockedBlocks: _unstakeLockedBlocks
@@ -354,33 +354,33 @@ contract MetaNodeStake is
         if (_to > endBlock) {_to = endBlock;}
         require(_from <= _to, "end block must be greater than start block");
         bool success;
-        (success, multiplier) = (_to - _from).tryMul(MetaNodePerBlock);
+        (success, multiplier) = (_to - _from).tryMul(YYPerBlock);
         require(success, "multiplier overflow");
     }
 
     /**
-     * @notice Get pending MetaNode amount of user in pool
+     * @notice Get pending YY amount of user in pool
      */
-    function pendingMetaNode(uint256 _pid, address _user) external checkPid(_pid) view returns(uint256) {
-        return pendingMetaNodeByBlockNumber(_pid, _user, block.number);
+    function pendingYY(uint256 _pid, address _user) external checkPid(_pid) view returns(uint256) {
+        return pendingYYByBlockNumber(_pid, _user, block.number);
     }
 
     /**
-     * @notice Get pending MetaNode amount of user by block number in pool
+     * @notice Get pending YY amount of user by block number in pool
      */
-    function pendingMetaNodeByBlockNumber(uint256 _pid, address _user, uint256 _blockNumber) public checkPid(_pid) view returns(uint256) {
+    function pendingYYByBlockNumber(uint256 _pid, address _user, uint256 _blockNumber) public checkPid(_pid) view returns(uint256) {
         Pool storage pool_ = pool[_pid];
         User storage user_ = user[_pid][_user];
-        uint256 accMetaNodePerST = pool_.accMetaNodePerST;
+        uint256 accYYPerST = pool_.accYYPerST;
         uint256 stSupply = pool_.stTokenAmount;
 
         if (_blockNumber > pool_.lastRewardBlock && stSupply != 0) {
             uint256 multiplier = getMultiplier(pool_.lastRewardBlock, _blockNumber);
-            uint256 MetaNodeForPool = multiplier * pool_.poolWeight / totalPoolWeight;
-            accMetaNodePerST = accMetaNodePerST + MetaNodeForPool * (1 ether) / stSupply;
+                    uint256 YYForPool = multiplier * pool_.poolWeight / totalPoolWeight;
+        accYYPerST = accYYPerST + YYForPool * (1 ether) / stSupply;
         }
 
-        return user_.stAmount * accMetaNodePerST / (1 ether) - user_.finishedMetaNode + user_.pendingMetaNode;
+        return user_.stAmount * accYYPerST / (1 ether) - user_.finishedYY + user_.pendingYY;
     }
 
     /**
@@ -416,28 +416,28 @@ contract MetaNodeStake is
             return;
         }
 
-        (bool success1, uint256 totalMetaNode) = getMultiplier(pool_.lastRewardBlock, block.number).tryMul(pool_.poolWeight);
+        (bool success1, uint256 totalYY) = getMultiplier(pool_.lastRewardBlock, block.number).tryMul(pool_.poolWeight);
         require(success1, "overflow");
 
-        (success1, totalMetaNode) = totalMetaNode.tryDiv(totalPoolWeight);
+        (success1, totalYY) = totalYY.tryDiv(totalPoolWeight);
         require(success1, "overflow");
 
         uint256 stSupply = pool_.stTokenAmount;
         if (stSupply > 0) {
-            (bool success2, uint256 totalMetaNode_) = totalMetaNode.tryMul(1 ether);
+            (bool success2, uint256 totalYY_) = totalYY.tryMul(1 ether);
             require(success2, "overflow");
 
-            (success2, totalMetaNode_) = totalMetaNode_.tryDiv(stSupply);
+            (success2, totalYY_) = totalYY_.tryDiv(stSupply);
             require(success2, "overflow");
 
-            (bool success3, uint256 accMetaNodePerST) = pool_.accMetaNodePerST.tryAdd(totalMetaNode_);
+            (bool success3, uint256 accYYPerST) = pool_.accYYPerST.tryAdd(totalYY_);
             require(success3, "overflow");
-            pool_.accMetaNodePerST = accMetaNodePerST;
+            pool_.accYYPerST = accYYPerST;
         }
 
         pool_.lastRewardBlock = block.number;
 
-        emit UpdatePool(_pid, pool_.lastRewardBlock, totalMetaNode);
+        emit UpdatePool(_pid, pool_.lastRewardBlock, totalYY);
     }
 
     /**
@@ -451,7 +451,7 @@ contract MetaNodeStake is
     }
 
     /**
-     * @notice Deposit staking ETH for MetaNode rewards
+     * @notice Deposit staking ETH for YY rewards
      */
     function depositETH() public whenNotPaused() payable {
         Pool storage pool_ = pool[ETH_PID];
@@ -464,7 +464,7 @@ contract MetaNodeStake is
     }
 
     /**
-     * @notice Deposit staking token for MetaNode rewards
+     * @notice Deposit staking token for YY rewards
      * Before depositing, user needs approve this contract to be able to spend or transfer their staking tokens
      *
      * @param _pid       Id of the pool to be deposited to
@@ -496,10 +496,10 @@ contract MetaNodeStake is
 
         updatePool(_pid);
 
-        uint256 pendingMetaNode_ = user_.stAmount * pool_.accMetaNodePerST / (1 ether) - user_.finishedMetaNode;
+        uint256 pendingYY_ = user_.stAmount * pool_.accYYPerST / (1 ether) - user_.finishedYY;
 
-        if(pendingMetaNode_ > 0) {
-            user_.pendingMetaNode = user_.pendingMetaNode + pendingMetaNode_;
+        if(pendingYY_ > 0) {
+            user_.pendingYY = user_.pendingYY + pendingYY_;
         }
 
         if(_amount > 0) {
@@ -511,7 +511,7 @@ contract MetaNodeStake is
         }
 
         pool_.stTokenAmount = pool_.stTokenAmount - _amount;
-        user_.finishedMetaNode = user_.stAmount * pool_.accMetaNodePerST / (1 ether);
+        user_.finishedYY = user_.stAmount * pool_.accYYPerST / (1 ether);
 
         emit RequestUnstake(msg.sender, _pid, _amount);
     }
@@ -555,7 +555,7 @@ contract MetaNodeStake is
     }
 
     /**
-     * @notice Claim MetaNode tokens reward
+     * @notice Claim YY tokens reward
      *
      * @param _pid       Id of the pool to be claimed from
      */
@@ -565,22 +565,22 @@ contract MetaNodeStake is
 
         updatePool(_pid);
 
-        uint256 pendingMetaNode_ = user_.stAmount * pool_.accMetaNodePerST / (1 ether) - user_.finishedMetaNode + user_.pendingMetaNode;
+        uint256 pendingYY_ = user_.stAmount * pool_.accYYPerST / (1 ether) - user_.finishedYY + user_.pendingYY;
 
-        if(pendingMetaNode_ > 0) {
-            user_.pendingMetaNode = 0;
-            _safeMetaNodeTransfer(msg.sender, pendingMetaNode_);
+        if(pendingYY_ > 0) {
+            user_.pendingYY = 0;
+            _safeYYTransfer(msg.sender, pendingYY_);
         }
 
-        user_.finishedMetaNode = user_.stAmount * pool_.accMetaNodePerST / (1 ether);
+        user_.finishedYY = user_.stAmount * pool_.accYYPerST / (1 ether);
 
-        emit Claim(msg.sender, _pid, pendingMetaNode_);
+        emit Claim(msg.sender, _pid, pendingYY_);
     }
 
     // ************************************** INTERNAL FUNCTION **************************************
 
     /**
-     * @notice Deposit staking token for MetaNode rewards
+     * @notice Deposit staking token for YY rewards
      *
      * @param _pid       Id of the pool to be deposited to
      * @param _amount    Amount of staking tokens to be deposited
@@ -592,19 +592,19 @@ contract MetaNodeStake is
         updatePool(_pid);
 
         if (user_.stAmount > 0) {
-            // uint256 accST = user_.stAmount.mulDiv(pool_.accMetaNodePerST, 1 ether);
-            (bool success1, uint256 accST) = user_.stAmount.tryMul(pool_.accMetaNodePerST);
-            require(success1, "user stAmount mul accMetaNodePerST overflow");
+                    // uint256 accST = user_.stAmount.mulDiv(pool_.accYYPerST, 1 ether);
+        (bool success1, uint256 accST) = user_.stAmount.tryMul(pool_.accYYPerST);
+        require(success1, "user stAmount mul accYYPerST overflow");
             (success1, accST) = accST.tryDiv(1 ether);
             require(success1, "accST div 1 ether overflow");
             
-            (bool success2, uint256 pendingMetaNode_) = accST.trySub(user_.finishedMetaNode);
-            require(success2, "accST sub finishedMetaNode overflow");
+            (bool success2, uint256 pendingYY_) = accST.trySub(user_.finishedYY);
+            require(success2, "accST sub finishedYY overflow");
 
-            if(pendingMetaNode_ > 0) {
-                (bool success3, uint256 _pendingMetaNode) = user_.pendingMetaNode.tryAdd(pendingMetaNode_);
-                require(success3, "user pendingMetaNode overflow");
-                user_.pendingMetaNode = _pendingMetaNode;
+            if(pendingYY_ > 0) {
+                (bool success3, uint256 _pendingYY) = user_.pendingYY.tryAdd(pendingYY_);
+                require(success3, "user pendingYY overflow");
+                user_.pendingYY = _pendingYY;
             }
         }
 
@@ -618,31 +618,31 @@ contract MetaNodeStake is
         require(success5, "pool stTokenAmount overflow");
         pool_.stTokenAmount = stTokenAmount;
 
-        // user_.finishedMetaNode = user_.stAmount.mulDiv(pool_.accMetaNodePerST, 1 ether);
-        (bool success6, uint256 finishedMetaNode) = user_.stAmount.tryMul(pool_.accMetaNodePerST);
-        require(success6, "user stAmount mul accMetaNodePerST overflow");
+        // user_.finishedYY = user_.stAmount.mulDiv(pool_.accYYPerST, 1 ether);
+        (bool success6, uint256 finishedYY) = user_.stAmount.tryMul(pool_.accYYPerST);
+        require(success6, "user stAmount mul accYYPerST overflow");
 
-        (success6, finishedMetaNode) = finishedMetaNode.tryDiv(1 ether);
-        require(success6, "finishedMetaNode div 1 ether overflow");
+        (success6, finishedYY) = finishedYY.tryDiv(1 ether);
+        require(success6, "finishedYY div 1 ether overflow");
 
-        user_.finishedMetaNode = finishedMetaNode;
+        user_.finishedYY = finishedYY;
 
         emit Deposit(msg.sender, _pid, _amount);
     }
 
     /**
-     * @notice Safe MetaNode transfer function, just in case if rounding error causes pool to not have enough MetaNodes
+     * @notice Safe YY transfer function, just in case if rounding error causes pool to not have enough YY tokens
      *
-     * @param _to        Address to get transferred MetaNodes
-     * @param _amount    Amount of MetaNode to be transferred
+     * @param _to        Address to get transferred YY tokens
+     * @param _amount    Amount of YY to be transferred
      */
-    function _safeMetaNodeTransfer(address _to, uint256 _amount) internal {
-        uint256 MetaNodeBal = MetaNode.balanceOf(address(this));
+    function _safeYYTransfer(address _to, uint256 _amount) internal {
+        uint256 YYBal = YY.balanceOf(address(this));
 
-        if (_amount > MetaNodeBal) {
-            MetaNode.transfer(_to, MetaNodeBal);
+        if (_amount > YYBal) {
+            YY.transfer(_to, YYBal);
         } else {
-            MetaNode.transfer(_to, _amount);
+            YY.transfer(_to, _amount);
         }
     }
 
