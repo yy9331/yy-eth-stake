@@ -112,11 +112,11 @@ const Withdraw = () => {
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent mb-4">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-4">
           Withdraw
         </h1>
-        <p className="text-gray-600 text-lg">
-          Unstake and withdraw your ETH
+        <p className="text-gray-600 text-lg font-medium">
+          💕 Unstake and withdraw your ETH 💕
         </p>
       </motion.div>
 
@@ -124,7 +124,7 @@ const Withdraw = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="card"
+        className="cute-card"
       >
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -243,9 +243,9 @@ const Withdraw = () => {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">{label}</div>
-      <div className="text-2xl font-semibold text-primary-600">{value}</div>
+    <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4 border-2 border-pink-200/50">
+      <div className="text-sm text-gray-600 mb-1 font-medium">{label}</div>
+      <div className="text-2xl font-semibold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">{value}</div>
     </div>
   );
 }

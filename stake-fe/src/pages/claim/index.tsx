@@ -8,7 +8,8 @@ import { useAccount, useWalletClient } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { waitForTransactionReceipt } from "viem/actions";
 import { toast } from "react-toastify";
-import { FiGift, FiInfo, FiTrendingUp, FiClock, FiZap } from 'react-icons/fi';
+import { FiGift, FiInfo, FiTrendingUp, FiClock, FiHeart } from 'react-icons/fi';
+import { RiFireLine } from "react-icons/ri";
 import { cn } from '../../utils/cn';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -56,25 +57,34 @@ const Claim = () => {
       >
         <div className="inline-block mb-4">
           <motion.div
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-20 h-20 rounded-full border-2 border-green-500/20 flex items-center justify-center shadow-xl"
-            style={{ boxShadow: '0 0 40px 0 rgba(34,197,94,0.15)' }}
+            animate={{ 
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{ 
+              scale: { duration: 2, repeat: Infinity },
+              rotate: { duration: 3, repeat: Infinity }
+            }}
+            className="w-24 h-24 rounded-full border-4 border-green-300/30 dark:border-green-500/50 flex items-center justify-center shadow-2xl bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50"
+            style={{ 
+              boxShadow: '0 0 60px 0 rgba(34,197,94,0.3)',
+              filter: 'drop-shadow(0 0 30px rgba(34,197,94,0.5))'
+            }}
           >
-            <FiGift className="w-10 h-10 text-green-500" />
+            <FiGift className="w-12 h-12 text-green-500 animate-pulse-slow" />
           </motion.div>
         </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent mb-4">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent mb-4">
           Claim Rewards
         </h1>
-        <p className="text-gray-400 text-xl">
-          Claim your YY rewards
+        <p className="text-gray-600 text-xl font-medium">
+          🎁 Claim your YY rewards 🎁
         </p>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Reward Stats Card */}
-        <Card className="p-6 sm:p-8 bg-gradient-to-br from-gray-800/80 to-gray-900/80 shadow-2xl border-green-500/20 border-[1.5px] rounded-2xl">
+        <Card className="p-6 sm:p-8 cute-card">
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-green-400 mb-6">Reward Statistics</h2>
             
@@ -120,17 +130,17 @@ const Claim = () => {
         </Card>
 
         {/* Claim Action Card */}
-        <Card className="p-6 sm:p-8 bg-gradient-to-br from-gray-800/80 to-gray-900/80 shadow-2xl border-green-500/20 border-[1.5px] rounded-2xl">
+        <Card className="p-6 sm:p-8 cute-card">
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-green-400 mb-6">Claim Rewards</h2>
             
             {/* Info Section */}
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-6">
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200/50 rounded-2xl p-6">
               <div className="flex items-start space-x-3">
-                <FiInfo className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <div className="text-sm text-blue-300">
-                  <p className="font-medium mb-2">How claiming works:</p>
-                  <ul className="space-y-1 text-xs">
+                <FiInfo className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+                <div className="text-sm text-gray-700">
+                  <p className="font-medium mb-2 text-purple-600">How claiming works:</p>
+                  <ul className="space-y-1 text-xs text-gray-600">
                     <li>• Rewards accumulate continuously while you stake</li>
                     <li>• You can claim rewards anytime</li>
                     <li>• Claimed rewards are sent to your wallet</li>
@@ -142,27 +152,27 @@ const Claim = () => {
 
             {/* Claim Status */}
             <div className={cn(
-              "rounded-xl p-6 border",
+              "rounded-2xl p-6 border-2",
               canClaim 
-                ? "bg-green-500/10 border-green-500/20" 
-                : "bg-gray-500/10 border-gray-500/20"
+                ? "bg-gradient-to-br from-green-50 to-emerald-50 border-green-300/50" 
+                : "bg-gradient-to-br from-gray-50 to-gray-100 border-gray-300/50"
             )}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <FiZap className={cn(
+                  <FiHeart className={cn(
                     "w-5 h-5",
-                    canClaim ? "text-green-400" : "text-gray-400"
+                    canClaim ? "text-green-500" : "text-gray-400"
                   )} />
                   <span className={cn(
                     "font-medium",
-                    canClaim ? "text-green-400" : "text-gray-400"
+                    canClaim ? "text-green-600" : "text-gray-500"
                   )}>
                     {canClaim ? "Ready to Claim" : "No Rewards Available"}
                   </span>
                 </div>
                 <div className={cn(
                   "w-3 h-3 rounded-full",
-                  canClaim ? "bg-green-400" : "bg-gray-400"
+                  canClaim ? "bg-green-500" : "bg-gray-400"
                 )} />
               </div>
             </div>
@@ -181,11 +191,11 @@ const Claim = () => {
                   disabled={claimLoading || !canClaim}
                   loading={claimLoading}
                   fullWidth
-                  className="py-4 text-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                  className="py-4 text-lg bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 cute-button"
                 >
                   <FiGift className="w-6 h-6" />
                   <span>
-                    {claimLoading ? 'Processing...' : canClaim ? 'Claim Rewards' : 'No Rewards'}
+                    {claimLoading ? 'Processing...' : canClaim ? '🎁 Claim Rewards 🎁' : 'No Rewards'}
                   </span>
                 </Button>
               )}
@@ -193,8 +203,8 @@ const Claim = () => {
 
             {/* Additional Info */}
             {!canClaim && isConnected && (
-              <div className="text-center text-gray-400 text-sm">
-                <p>Start staking ETH to earn YY rewards!</p>
+              <div className="text-center text-gray-600 text-sm font-medium">
+                <p>💕 Start staking ETH to earn YY rewards! 💕</p>
               </div>
             )}
           </div>
@@ -208,12 +218,12 @@ const Claim = () => {
         transition={{ duration: 0.5, delay: 0.3 }}
         className="mt-12"
       >
-        <Card className="p-6 sm:p-8 bg-gradient-to-br from-gray-800/80 to-gray-900/80 shadow-2xl border-gray-500/20 border-[1.5px] rounded-2xl">
-          <h2 className="text-2xl font-bold text-gray-300 mb-6">Reward History</h2>
-          <div className="text-center text-gray-400 py-8">
-            <FiClock className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-            <p>Reward history will be displayed here</p>
-            <p className="text-sm mt-2">Track your past claims and rewards</p>
+        <Card className="p-6 sm:p-8 cute-card">
+          <h2 className="text-2xl font-bold text-gray-700 mb-6">Reward History</h2>
+          <div className="text-center text-gray-600 py-8">
+            <FiClock className="w-12 h-12 mx-auto mb-4 text-purple-500" />
+            <p className="font-medium">Reward history will be displayed here</p>
+            <p className="text-sm mt-2 text-gray-500">Track your past claims and rewards</p>
           </div>
         </Card>
       </motion.div>

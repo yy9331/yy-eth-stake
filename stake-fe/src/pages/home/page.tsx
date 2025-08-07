@@ -9,8 +9,8 @@ import { parseUnits } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { toast } from "react-toastify";
 import { waitForTransactionReceipt } from "viem/actions";
-import { FiArrowDown, FiInfo, FiZap, FiTrendingUp, FiGift } from 'react-icons/fi';
-import { cn } from '../../utils/cn';
+import { FiArrowDown, FiInfo, FiTrendingUp, FiGift, FiStar } from 'react-icons/fi';
+import { RiFireLine } from "react-icons/ri";
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
@@ -122,36 +122,47 @@ const Home = () => {
         transition={{ duration: 0.5 }}
         className="text-center mb-6"
       >
-        <div className="inline-block mb-2">
+        <div className="inline-block mb-4">
           <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="w-24 h-24 rounded-full border-2 border-primary-500/20 flex items-center justify-center shadow-xl"
-            style={{ boxShadow: '0 0 60px 0 rgba(14,165,233,0.15)' }}
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.1, 1],
+              y: [0, -10, 0]
+            }}
+            transition={{ 
+              rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+              scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+              y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+            }}
+            className="w-28 h-28 rounded-full border-4 border-pink-300/30 dark:border-pink-500/50 flex items-center justify-center shadow-2xl bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/50 dark:to-purple-900/50"
+            style={{ 
+              boxShadow: '0 0 80px 0 rgba(244,114,182,0.3)',
+              filter: 'drop-shadow(0 0 40px rgba(244,114,182,0.5))'
+            }}
           >
-            <FiZap className="w-12 h-12 text-primary-500" />
+            <RiFireLine className="w-14 h-14 text-pink-500 animate-pulse-slow" />
           </motion.div>
         </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent mb-2">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-pink-400 via-purple-500 to-pink-600 bg-clip-text text-transparent mb-3">
           YY Stake
         </h1>
-        <p className="text-gray-400 text-xl">
-          Stake ETH to earn tokens
+        <p className="text-gray-600 dark:text-gray-300 text-xl font-medium">
+          💕 Stake ETH to earn tokens 💕
         </p>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {/* Stake Card */}
-        <Card className="min-h-[420px] p-4 sm:p-8 md:p-12 bg-gradient-to-br from-gray-800/80 to-gray-900/80 shadow-2xl border-primary-500/20 border-[1.5px] rounded-2xl sm:rounded-3xl">
+        <Card className="min-h-[420px] p-4 sm:p-8 md:p-12 cute-card">
           <div className="space-y-8 sm:space-y-12">
             {/* Staked Amount Display */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-8 bg-gray-800/70 rounded-xl sm:rounded-2xl border border-gray-700/50 group-hover:border-primary-500/50 transition-colors duration-300 shadow-lg">
-              <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-primary-500/10 rounded-full">
-                <FiTrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-primary-400" />
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-8 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 border-pink-200/50 dark:border-gray-600/50 group-hover:border-pink-300/70 dark:group-hover:border-gray-500/70 transition-all duration-300 shadow-lg hover:shadow-xl">
+              <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-pink-200 to-purple-200 dark:from-gray-600 dark:to-gray-700 rounded-full animate-pulse-slow">
+                <FiStar className="w-8 h-8 sm:w-10 sm:h-10 text-pink-500" />
               </div>
               <div className="flex flex-col justify-center flex-1 min-w-0 items-center sm:items-start">
-                <span className="text-gray-400 text-base sm:text-lg mb-1">Staked Amount</span>
-                <span className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent leading-tight break-all">
+                <span className="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-1 font-medium">Staked Amount</span>
+                <span className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent leading-tight break-all">
                   {parseFloat(poolData.stTokenAmount || '0').toFixed(4)} ETH
                 </span>
               </div>
@@ -185,10 +196,10 @@ const Home = () => {
                   disabled={loading || !amount}
                   loading={loading}
                   fullWidth
-                  className="py-3 sm:py-5 text-lg sm:text-xl"
+                  className="py-3 sm:py-5 text-lg sm:text-xl cute-button"
                 >
                   <FiArrowDown className="w-6 h-6 sm:w-7 sm:h-7" />
-                  <span>Stake ETH</span>
+                  <span>💕 Stake ETH 💕</span>
                 </Button>
               )}
             </div>
@@ -196,16 +207,16 @@ const Home = () => {
         </Card>
 
         {/* Claim Card */}
-        <Card className="min-h-[420px] p-4 sm:p-8 md:p-12 bg-gradient-to-br from-gray-800/80 to-gray-900/80 shadow-2xl border-primary-500/20 border-[1.5px] rounded-2xl sm:rounded-3xl">
+        <Card className="min-h-[420px] p-4 sm:p-8 md:p-12 cute-card">
           <div className="space-y-8 sm:space-y-12">
             {/* Pending Reward Display */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-8 bg-gray-800/70 rounded-xl sm:rounded-2xl border border-gray-700/50 group-hover:border-primary-500/50 transition-colors duration-300 shadow-lg">
-              <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-green-500/10 rounded-full">
-                <FiGift className="w-8 h-8 sm:w-10 sm:h-10 text-green-400" />
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 border-green-200/50 dark:border-gray-600/50 group-hover:border-green-300/70 dark:group-hover:border-gray-500/70 transition-all duration-300 shadow-lg hover:shadow-xl">
+              <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-green-200 to-emerald-200 dark:from-gray-600 dark:to-gray-700 rounded-full animate-pulse-slow">
+                <FiGift className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" />
               </div>
               <div className="flex flex-col justify-center flex-1 min-w-0 items-center sm:items-start">
-                <span className="text-gray-400 text-base sm:text-lg mb-1">Pending Rewards</span>
-                <span className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent leading-tight break-all">
+                <span className="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-1 font-medium">Pending Rewards</span>
+                <span className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent leading-tight break-all">
                   {parseFloat(rewardsData.pendingReward).toFixed(4)} YY
                 </span>
               </div>
@@ -213,12 +224,12 @@ const Home = () => {
 
             {/* Info Section */}
             <div className="space-y-4 sm:space-y-6">
-              <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 sm:p-6">
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200/50 rounded-2xl p-4 sm:p-6">
                 <div className="flex items-start space-x-3">
-                  <FiInfo className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm text-blue-300">
-                    <p className="font-medium mb-1">How rewards work:</p>
-                    <ul className="space-y-1 text-xs">
+                  <FiInfo className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+                                      <div className="text-sm text-gray-700 dark:text-gray-300">
+                      <p className="font-medium mb-1 text-purple-600 dark:text-purple-400">How rewards work:</p>
+                      <ul className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
                       <li>• Rewards accumulate based on your staked amount and time</li>
                       <li>• You can claim rewards anytime</li>
                       <li>• Rewards are paid in YY tokens</li>
@@ -242,10 +253,10 @@ const Home = () => {
                   disabled={claimLoading || !canClaim}
                   loading={claimLoading}
                   fullWidth
-                  className="py-3 sm:py-5 text-lg sm:text-xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                  className="py-3 sm:py-5 text-lg sm:text-xl bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 cute-button"
                 >
                   <FiGift className="w-6 h-6 sm:w-7 sm:h-7" />
-                  <span>Claim Rewards</span>
+                  <span>🎁 Claim Rewards 🎁</span>
                 </Button>
               )}
             </div>

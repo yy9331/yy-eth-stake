@@ -14,7 +14,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={cn("space-y-2", fullWidth && "w-full")}>
         {label && (
-          <label className="block text-sm font-medium text-gray-400">
+          <label className="block text-sm font-medium text-gray-400 dark:text-gray-300">
             {label}
           </label>
         )}
@@ -38,7 +38,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {(error || helperText) && (
           <p className={cn(
             "text-sm",
-            error ? "text-red-500" : "text-gray-500"
+            error ? "text-red-500" : "text-gray-500 dark:text-gray-400"
           )}>
             {error || helperText}
           </p>
