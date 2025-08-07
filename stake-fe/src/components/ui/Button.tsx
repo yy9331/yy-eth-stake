@@ -26,9 +26,9 @@ export const Button = ({
   const baseStyles = "flex items-center justify-center space-x-2 transition-all duration-300";
 
   const variants = {
-    primary: "btn-primary",
+    primary: "bg-gradient-to-r from-red-400 to-orange-500 hover:from-red-500 hover:to-orange-600 text-white rounded-2xl px-6 py-3 font-semibold transition-all duration-300 ease-in-out shadow-lg hover:shadow-red-500/30 border-2 border-white/20",
     secondary: "bg-gray-700 hover:bg-gray-600 text-white rounded-lg px-6 py-3",
-    outline: "border-2 border-primary-500 text-primary-500 hover:bg-primary-500/10 rounded-lg px-6 py-3",
+    outline: "border-2 border-red-500 text-red-500 hover:bg-red-500/10 rounded-lg px-6 py-3",
   };
 
   return (

@@ -6,7 +6,7 @@ import { useCallback, useState, useEffect } from "react";
 import { Pid } from "../../utils";
 import { useAccount, useWalletClient, useBalance } from "wagmi";
 import { parseUnits } from "viem";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { CustomConnectButton } from "../../components/ui/CustomConnectButton";
 import { toast } from "react-toastify";
 import { waitForTransactionReceipt } from "viem/actions";
 import { FiArrowDown, FiInfo, FiTrendingUp, FiGift, FiStar } from 'react-icons/fi';
@@ -134,20 +134,20 @@ const Home = () => {
               scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
               y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
             }}
-            className="w-28 h-28 rounded-full border-4 border-pink-300/30 dark:border-pink-500/50 flex items-center justify-center shadow-2xl bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/50 dark:to-purple-900/50"
+            className="w-28 h-28 rounded-full border-4 border-red-300/30 dark:border-red-500/50 flex items-center justify-center shadow-2xl bg-gradient-to-br from-red-100 to-orange-100 dark:from-red-900/50 dark:to-orange-900/50"
             style={{ 
-              boxShadow: '0 0 80px 0 rgba(244,114,182,0.3)',
-              filter: 'drop-shadow(0 0 40px rgba(244,114,182,0.5))'
+              boxShadow: '0 0 80px 0 rgba(239,68,68,0.3)',
+              filter: 'drop-shadow(0 0 40px rgba(239,68,68,0.5))'
             }}
           >
-            <RiFireLine className="w-14 h-14 text-pink-500 animate-pulse-slow" />
+                          <RiFireLine className="w-14 h-14 text-red-500 animate-pulse-slow" />
           </motion.div>
         </div>
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-pink-400 via-purple-500 to-pink-600 bg-clip-text text-transparent mb-3">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-red-400 via-orange-500 to-yellow-500 bg-clip-text text-transparent mb-3">
           YY Stake
         </h1>
         <p className="text-gray-600 dark:text-gray-300 text-xl font-medium">
-          💕 Stake ETH to earn tokens 💕
+          🔥✨ Stake ETH to earn tokens 🔥✨
         </p>
       </motion.div>
 
@@ -156,13 +156,13 @@ const Home = () => {
         <Card className="min-h-[420px] p-4 sm:p-8 md:p-12 cute-card">
           <div className="space-y-8 sm:space-y-12">
             {/* Staked Amount Display */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-8 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 border-pink-200/50 dark:border-gray-600/50 group-hover:border-pink-300/70 dark:group-hover:border-gray-500/70 transition-all duration-300 shadow-lg hover:shadow-xl">
-              <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-pink-200 to-purple-200 dark:from-gray-600 dark:to-gray-700 rounded-full animate-pulse-slow">
-                <FiStar className="w-8 h-8 sm:w-10 sm:h-10 text-pink-500" />
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-8 bg-gradient-to-br from-red-50 to-orange-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 border-red-200/50 dark:border-gray-600/50 group-hover:border-red-300/70 dark:group-hover:border-gray-500/70 transition-all duration-300 shadow-lg hover:shadow-xl">
+              <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-red-200 to-orange-200 dark:from-gray-600 dark:to-gray-700 rounded-full animate-pulse-slow">
+                <FiStar className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
               </div>
               <div className="flex flex-col justify-center flex-1 min-w-0 items-center sm:items-start">
                 <span className="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-1 font-medium">Staked Amount</span>
-                <span className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent leading-tight break-all">
+                <span className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent leading-tight break-all">
                   {parseFloat(poolData.stTokenAmount || '0').toFixed(4)} ETH
                 </span>
               </div>
@@ -186,9 +186,7 @@ const Home = () => {
             <div className="pt-4 sm:pt-8">
               {!isConnected ? (
                 <div className="flex justify-center">
-                  <div className="glow">
-                    <ConnectButton />
-                  </div>
+                  <CustomConnectButton />
                 </div>
               ) : (
                 <Button
@@ -196,10 +194,10 @@ const Home = () => {
                   disabled={loading || !amount}
                   loading={loading}
                   fullWidth
-                  className="py-3 sm:py-5 text-lg sm:text-xl cute-button"
+                  className="py-3 sm:py-5 text-lg sm:text-xl bg-gradient-to-r from-red-400 to-orange-500 hover:from-red-500 hover:to-orange-600 cute-button"
                 >
                   <FiArrowDown className="w-6 h-6 sm:w-7 sm:h-7" />
-                  <span>💕 Stake ETH 💕</span>
+                  <span>🔥✨ Stake ETH 🔥✨</span>
                 </Button>
               )}
             </div>
@@ -243,9 +241,7 @@ const Home = () => {
             <div className="pt-4 sm:pt-8">
               {!isConnected ? (
                 <div className="flex justify-center">
-                  <div className="glow">
-                    <ConnectButton />
-                  </div>
+                  <CustomConnectButton />
                 </div>
               ) : (
                 <Button

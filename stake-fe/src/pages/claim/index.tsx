@@ -5,7 +5,7 @@ import useRewards from "../../hooks/useRewards";
 import { useCallback, useState } from "react";
 import { Pid } from "../../utils";
 import { useAccount, useWalletClient } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { CustomConnectButton } from "../../components/ui/CustomConnectButton";
 import { waitForTransactionReceipt } from "viem/actions";
 import { toast } from "react-toastify";
 import { FiGift, FiInfo, FiTrendingUp, FiClock, FiHeart } from 'react-icons/fi';
@@ -181,9 +181,7 @@ const Claim = () => {
             <div className="pt-4">
               {!isConnected ? (
                 <div className="flex justify-center">
-                  <div className="glow">
-                    <ConnectButton />
-                  </div>
+                  <CustomConnectButton />
                 </div>
               ) : (
                 <Button
@@ -204,7 +202,7 @@ const Claim = () => {
             {/* Additional Info */}
             {!canClaim && isConnected && (
               <div className="text-center text-gray-600 text-sm font-medium">
-                <p>💕 Start staking ETH to earn YY rewards! 💕</p>
+                <p>🔥 Start staking ETH to earn YY rewards! 🔥</p>
               </div>
             )}
           </div>

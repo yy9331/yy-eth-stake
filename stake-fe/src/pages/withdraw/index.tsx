@@ -5,11 +5,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Pid } from "../../utils";
 import { useAccount, useWalletClient } from "wagmi";
 import { formatUnits, parseUnits } from "viem";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { CustomConnectButton } from "../../components/ui/CustomConnectButton";
 import { waitForTransactionReceipt } from "viem/actions";
 import { toast } from "react-toastify";
 import { FiArrowUp, FiClock, FiInfo } from 'react-icons/fi';
 import { cn } from '../../utils/cn';
+import { retryWithDelay } from '../../utils/retry';
 
 export type UserStakeData = {
   staked: string;
@@ -36,16 +37,28 @@ const Withdraw = () => {
 
   const getUserData = useCallback(async () => {
     if (!stakeContract || !address) return;
-    const staked = await stakeContract.read.stakingBalance([Pid, address]);
-    // @ts-ignore
-    const [requestAmount, pendingWithdrawAmount] = await stakeContract.read.withdrawAmount([Pid, address]);
-    const ava = Number(formatUnits(pendingWithdrawAmount, 18));
-    const total = Number(formatUnits(requestAmount, 18));
-    setUserData({
-      staked: formatUnits(staked as bigint, 18),
-      withdrawPending: (total - ava).toFixed(4),
-      withdrawable: ava.toString()
-    });
+    
+    try {
+      const staked = await retryWithDelay(() => 
+        stakeContract.read.stakingBalance([Pid, address])
+      );
+      
+      // @ts-ignore
+      const [requestAmount, pendingWithdrawAmount] = await retryWithDelay(() => 
+        stakeContract.read.withdrawAmount([Pid, address])
+      );
+      
+      const ava = Number(formatUnits(pendingWithdrawAmount, 18));
+      const total = Number(formatUnits(requestAmount, 18));
+      setUserData({
+        staked: formatUnits(staked as bigint, 18),
+        withdrawPending: (total - ava).toFixed(4),
+        withdrawable: ava.toString()
+      });
+    } catch (error) {
+      console.error('获取用户数据失败:', error);
+      toast.error('获取数据失败，请稍后重试');
+    }
   }, [stakeContract, address]);
 
   useEffect(() => {
@@ -112,11 +125,11 @@ const Withdraw = () => {
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-4">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent mb-4">
           Withdraw
         </h1>
         <p className="text-gray-600 text-lg font-medium">
-          💕 Unstake and withdraw your ETH 💕
+        🔥✨ Unstake and withdraw your ETH 🔥✨
         </p>
       </motion.div>
 
@@ -160,7 +173,7 @@ const Withdraw = () => {
           <div className="pt-4">
             {!isConnected ? (
               <div className="flex justify-center">
-                <ConnectButton />
+                <CustomConnectButton />
               </div>
             ) : (
               <motion.button
@@ -169,7 +182,7 @@ const Withdraw = () => {
                 onClick={handleUnStake}
                 disabled={unstakeLoading || !amount}
                 className={cn(
-                  "btn-primary w-full flex items-center justify-center space-x-2",
+                  "w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-400 to-orange-500 hover:from-red-500 hover:to-orange-600 text-white rounded-2xl py-3 px-6 font-semibold transition-all duration-300 ease-in-out shadow-lg hover:shadow-red-500/30 border-2 border-white/20",
                   unstakeLoading && "opacity-70 cursor-not-allowed"
                 )}
               >
@@ -193,11 +206,11 @@ const Withdraw = () => {
         <div className="mt-12 space-y-6">
           <h2 className="text-xl font-semibold">Withdraw</h2>
 
-          <div className="bg-primary-50 rounded-lg p-4">
+          <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-4 border-2 border-red-200/50">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-gray-600">Ready to Withdraw</div>
-                <div className="text-2xl font-semibold text-primary-600">
+                <div className="text-sm text-gray-600 font-medium">Ready to Withdraw</div>
+                <div className="text-2xl font-semibold bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent">
                   {parseFloat(userData.withdrawable).toFixed(4)} ETH
                 </div>
               </div>
@@ -219,7 +232,7 @@ const Withdraw = () => {
             onClick={handleWithdraw}
             disabled={!isWithdrawable || withdrawLoading}
             className={cn(
-              "btn-primary w-full flex items-center justify-center space-x-2",
+              "w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-400 to-orange-500 hover:from-red-500 hover:to-orange-600 text-white rounded-2xl py-3 px-6 font-semibold transition-all duration-300 ease-in-out shadow-lg hover:shadow-red-500/30 border-2 border-white/20",
               (!isWithdrawable || withdrawLoading) && "opacity-70 cursor-not-allowed"
             )}
           >
@@ -243,9 +256,9 @@ const Withdraw = () => {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4 border-2 border-pink-200/50">
+    <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-4 border-2 border-red-200/50">
       <div className="text-sm text-gray-600 mb-1 font-medium">{label}</div>
-      <div className="text-2xl font-semibold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">{value}</div>
+      <div className="text-2xl font-semibold bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent">{value}</div>
     </div>
   );
 }
