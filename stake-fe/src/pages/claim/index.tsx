@@ -68,7 +68,7 @@ const Claim = () => {
           Claim Rewards
         </h1>
         <p className="text-gray-400 text-xl">
-          Claim your MetaNode rewards
+          Claim your YY rewards
         </p>
       </motion.div>
 
@@ -86,7 +86,7 @@ const Claim = () => {
                   <span className="text-gray-300 font-medium">Pending Rewards</span>
                 </div>
                 <span className="text-2xl font-bold text-green-400">
-                  {parseFloat(rewardsData.pendingReward).toFixed(4)} MetaNode
+                  {parseFloat(rewardsData.pendingReward).toFixed(4)} YY
                 </span>
               </div>
             </div>
@@ -194,7 +194,7 @@ const Claim = () => {
             {/* Additional Info */}
             {!canClaim && isConnected && (
               <div className="text-center text-gray-400 text-sm">
-                <p>Start staking ETH to earn MetaNode rewards!</p>
+                <p>Start staking ETH to earn YY rewards!</p>
               </div>
             )}
           </div>

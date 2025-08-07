@@ -7,7 +7,7 @@ import {
 const ProjectId = 'e3242412afd6123ce1dda1de23a8c016'
 
 export const config = getDefaultConfig({
-  appName: 'Meta Node Stake',
+  appName: 'YY Stake',
   projectId: ProjectId,
   chains: [
     sepolia

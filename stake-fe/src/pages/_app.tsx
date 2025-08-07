@@ -41,8 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 pauseOnHover
                 theme="light"
                 toastClassName="custom-toast"
-                bodyClassName="custom-toast-body"
-                progressClassName="custom-toast-progress"
+                className="custom-toast-body"
               />
               <Layout><Component {...pageProps} /></Layout>
             </RainbowKitProvider>

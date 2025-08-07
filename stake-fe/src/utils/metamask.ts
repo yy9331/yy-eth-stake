@@ -38,12 +38,12 @@ export async function addTokenToMetaMask(tokenData: {
   }
 }
 
-// 添加MetaNode代币到MetaMask
-export async function addMetaNodeToMetaMask(metaNodeAddress: string) {
+// 添加YY代币到MetaMask
+export async function addYYToMetaMask(yyAddress: string) {
   return addTokenToMetaMask({
-    address: metaNodeAddress,
-    symbol: 'MetaNode',
+    address: yyAddress,
+    symbol: 'YY',
     decimals: 18,
-    image: '' // 可以添加MetaNode代币的logo URL
+    image: '' // 可以添加YY代币的logo URL
   });
 } 

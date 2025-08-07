@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useStakeContract } from "../../hooks/useContract";
 import useRewards from "../../hooks/useRewards";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Pid } from "../../utils";
 import { useAccount, useWalletClient, useBalance } from "wagmi";
 import { parseUnits } from "viem";
@@ -32,8 +32,22 @@ const Home = () => {
     }
   });
 
+  // 检查合约状态
+  useEffect(() => {
+    if (stakeContract && isConnected) {
+      console.log('Contract address:', stakeContract.address);
+      console.log('Wallet connected:', address);
+      console.log('Pool data:', poolData);
+    }
+  }, [stakeContract, isConnected, address, poolData]);
+
   const handleStake = async () => {
-    if (!stakeContract || !data) return;
+    if (!stakeContract || !data) {
+      console.error('Contract or wallet not available');
+      toast.error('Contract or wallet not available');
+      return;
+    }
+    
     if (!amount || parseFloat(amount) <= 0) {
       toast.error('Please enter a valid amount');
       return;
@@ -44,23 +58,37 @@ const Home = () => {
       return;
     }
 
+    // 检查最小质押金额
+    const minDepositAmount = parseFloat(poolData.minDepositAmount || '0');
+    if (parseFloat(amount) < minDepositAmount) {
+      toast.error(`Minimum deposit amount is ${minDepositAmount} ETH`);
+      return;
+    }
+
     try {
       setLoading(true);
+      console.log('Staking amount:', amount, 'ETH');
+      console.log('Contract address:', stakeContract.address);
+      console.log('Wallet address:', address);
+      
       const tx = await stakeContract.write.depositETH([], { value: parseUnits(amount, 18) });
+      console.log('Transaction hash:', tx);
+      
       const res = await waitForTransactionReceipt(data, { hash: tx });
-      console.log({ res })
+      console.log('Transaction receipt:', res);
+      
       if (res.status === 'success') {
         toast.success('Stake successful!');
         setAmount('');
         setLoading(false);
         refresh(); // 刷新奖励数据
-        return
+        return;
       }
-      toast.error('Stake failed!')
+      toast.error('Stake failed!');
     } catch (error) {
       setLoading(false);
-      toast.error('Transaction failed. Please try again.');
-      console.log(error, 'stake-error');
+      console.error('Stake error details:', error);
+      toast.error(`Transaction failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -105,7 +133,7 @@ const Home = () => {
           </motion.div>
         </div>
         <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent mb-2">
-          MetaNode Stake
+          YY Stake
         </h1>
         <p className="text-gray-400 text-xl">
           Stake ETH to earn tokens
@@ -178,7 +206,7 @@ const Home = () => {
               <div className="flex flex-col justify-center flex-1 min-w-0 items-center sm:items-start">
                 <span className="text-gray-400 text-base sm:text-lg mb-1">Pending Rewards</span>
                 <span className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent leading-tight break-all">
-                  {parseFloat(rewardsData.pendingReward).toFixed(4)} MetaNode
+                  {parseFloat(rewardsData.pendingReward).toFixed(4)} YY
                 </span>
               </div>
             </div>
@@ -193,7 +221,7 @@ const Home = () => {
                     <ul className="space-y-1 text-xs">
                       <li>• Rewards accumulate based on your staked amount and time</li>
                       <li>• You can claim rewards anytime</li>
-                      <li>• Rewards are paid in MetaNode tokens</li>
+                      <li>• Rewards are paid in YY tokens</li>
                     </ul>
                   </div>
                 </div>

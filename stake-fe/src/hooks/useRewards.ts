@@ -3,7 +3,7 @@ import { useAccount } from 'wagmi';
 import { formatUnits } from 'viem';
 import { useStakeContract } from './useContract';
 import { Pid } from '../utils';
-import { addMetaNodeToMetaMask } from '../utils/metamask';
+import { addYYToMetaMask } from '../utils/metamask';
 import { retryWithDelay } from '../utils/retry';
 
 export type RewardsData = {
@@ -12,9 +12,9 @@ export type RewardsData = {
   lastUpdate: number;
 };
 
-type UserData = [bigint, bigint, bigint]; // [stAmount, finishedMetaNode, pendingMetaNode]
+type UserData = [bigint, bigint, bigint]; // [stAmount, finishedYY, pendingYY]
 
-type PoolData = [string, bigint, bigint, bigint, bigint, bigint, bigint]; // [stTokenAddress, poolWeight, lastRewardBlock, accMetaNodePerST, stTokenAmount, minDepositAmount, unstakeLockedBlocks]
+type PoolData = [string, bigint, bigint, bigint, bigint, bigint, bigint]; // [stTokenAddress, poolWeight, lastRewardBlock, accYYPerST, stTokenAmount, minDepositAmount, unstakeLockedBlocks]
 
 const useRewards = () => {
   const stakeContract = useStakeContract();
@@ -29,10 +29,10 @@ const useRewards = () => {
   const [poolData, setPoolData] = useState<Record<string, string>>({
     poolWeight: '0',
     lastRewardBlock: '0',
-    accMetaNodePerShare: '0'
+    accYYPerShare: '0'
   });
 
-  const [metaNodeAddress, setMetaNodeAddress] = useState<string>('');
+  const [yyAddress, setYYAddress] = useState<string>('');
 
   const fetchPoolData = useCallback(async () => {
     if (!stakeContract || !address || !isConnected) return;
@@ -47,7 +47,7 @@ const useRewards = () => {
       setPoolData({
         poolWeight: formatUnits(pool[1] as bigint || BigInt(0), 18),
         lastRewardBlock: formatUnits(pool[2] as bigint || BigInt(0), 18),
-        accMetaNodePerShare: formatUnits(pool[3] as bigint || BigInt(0), 18),
+        accYYPerShare: formatUnits(pool[3] as bigint || BigInt(0), 18),
         stTokenAmount: formatUnits(pool[4] as bigint || BigInt(0), 18),
         minDepositAmount: formatUnits(pool[5] as bigint || BigInt(0), 18),
         unstakeLockedBlocks: formatUnits(pool[6] as bigint || BigInt(0), 18),
@@ -58,17 +58,17 @@ const useRewards = () => {
     }
   }, [stakeContract, address, isConnected]);
 
-  // 获取MetaNode代币地址
-  const fetchMetaNodeAddress = useCallback(async () => {
+  // 获取YY代币地址
+  const fetchYYAddress = useCallback(async () => {
     if (!stakeContract) return;
 
     try {
       const address = await retryWithDelay(() => 
-        stakeContract.read.MetaNode() as Promise<string>
+        stakeContract.read.YY() as Promise<string>
       );
-      setMetaNodeAddress(address as string);
+      setYYAddress(address as string);
     } catch (error) {
-      console.error('Failed to fetch MetaNode address:', error);
+      console.error('Failed to fetch YY address:', error);
     }
   }, [stakeContract]);
 
@@ -112,9 +112,9 @@ const useRewards = () => {
     if (isConnected && address) {
       fetchRewardsData();
       fetchPoolData();
-      fetchMetaNodeAddress();
+      fetchYYAddress();
     }
-  }, [isConnected, address, fetchRewardsData, fetchPoolData, fetchMetaNodeAddress]);
+  }, [isConnected, address, fetchRewardsData, fetchPoolData, fetchYYAddress]);
 
   // 定期刷新数据（每60秒）
   useEffect(() => {
@@ -132,28 +132,28 @@ const useRewards = () => {
     fetchRewardsData();
   }, [fetchRewardsData]);
 
-  // 添加MetaNode代币到MetaMask
-  const addMetaNodeToWallet = useCallback(async () => {
-    if (!metaNodeAddress) {
-      console.error('MetaNode地址未获取到');
+  // 添加YY代币到MetaMask
+  const addYYToWallet = useCallback(async () => {
+    if (!yyAddress) {
+      console.error('YY地址未获取到');
       return false;
     }
 
     try {
-      return await addMetaNodeToMetaMask(metaNodeAddress);
+      return await addYYToMetaMask(yyAddress);
     } catch (error) {
-      console.error('添加MetaNode到钱包失败:', error);
+      console.error('添加YY到钱包失败:', error);
       return false;
     }
-  }, [metaNodeAddress]);
+  }, [yyAddress]);
 
   return {
     rewardsData,
     loading,
     poolData,
-    metaNodeAddress,
+    yyAddress,
     refresh,
-    addMetaNodeToWallet,
+    addYYToWallet,
     canClaim: parseFloat(rewardsData.pendingReward) > 0
   };
 };

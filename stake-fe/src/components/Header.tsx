@@ -43,7 +43,7 @@ const Header = () => {
           >
             <FiZap className="w-5 h-5 sm:w-6 sm:h-6 text-primary-500 animate-pulse-slow mb-1 md:mb-0" />
             <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent leading-tight">
-              <span className="block md:inline">MetaNode</span>
+              <span className="block md:inline">YY</span>
               <span className="block md:inline"> Stake</span>
             </Link>
           </motion.div>

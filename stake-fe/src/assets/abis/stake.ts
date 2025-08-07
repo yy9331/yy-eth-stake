@@ -154,7 +154,7 @@ export const stakeAbi = [
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "MetaNodeReward",
+        "name": "YYReward",
         "type": "uint256"
       }
     ],
@@ -343,11 +343,11 @@ export const stakeAbi = [
       {
         "indexed": true,
         "internalType": "contract IERC20",
-        "name": "MetaNode",
+        "name": "YY",
         "type": "address"
       }
     ],
-    "name": "SetMetaNode",
+    "name": "SetYY",
     "type": "event"
   },
   {
@@ -356,11 +356,11 @@ export const stakeAbi = [
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "MetaNodePerBlock",
+        "name": "YYPerBlock",
         "type": "uint256"
       }
     ],
-    "name": "SetMetaNodePerBlock",
+    "name": "SetYYPerBlock",
     "type": "event"
   },
   {
@@ -444,7 +444,7 @@ export const stakeAbi = [
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "totalMetaNode",
+        "name": "totalYY",
         "type": "uint256"
       }
     ],
@@ -561,7 +561,7 @@ export const stakeAbi = [
   },
   {
     "inputs": [],
-    "name": "MetaNode",
+    "name": "YY",
     "outputs": [
       {
         "internalType": "contract IERC20",
@@ -574,7 +574,7 @@ export const stakeAbi = [
   },
   {
     "inputs": [],
-    "name": "MetaNodePerBlock",
+    "name": "YYPerBlock",
     "outputs": [
       {
         "internalType": "uint256",
@@ -797,7 +797,7 @@ export const stakeAbi = [
     "inputs": [
       {
         "internalType": "contract IERC20",
-        "name": "_MetaNode",
+        "name": "_YY",
         "type": "address"
       },
       {
@@ -812,7 +812,7 @@ export const stakeAbi = [
       },
       {
         "internalType": "uint256",
-        "name": "_MetaNodePerBlock",
+        "name": "_YYPerBlock",
         "type": "uint256"
       }
     ],
@@ -868,7 +868,7 @@ export const stakeAbi = [
         "type": "address"
       }
     ],
-    "name": "pendingMetaNode",
+    "name": "pendingYY",
     "outputs": [
       {
         "internalType": "uint256",
@@ -897,7 +897,7 @@ export const stakeAbi = [
         "type": "uint256"
       }
     ],
-    "name": "pendingMetaNodeByBlockNumber",
+    "name": "pendingYYByBlockNumber",
     "outputs": [
       {
         "internalType": "uint256",
@@ -935,7 +935,7 @@ export const stakeAbi = [
       },
       {
         "internalType": "uint256",
-        "name": "accMetaNodePerST",
+        "name": "accYYPerST",
         "type": "uint256"
       },
       {
@@ -1036,11 +1036,11 @@ export const stakeAbi = [
     "inputs": [
       {
         "internalType": "contract IERC20",
-        "name": "_MetaNode",
+        "name": "_YY",
         "type": "address"
       }
     ],
-    "name": "setMetaNode",
+    "name": "setYY",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1049,11 +1049,11 @@ export const stakeAbi = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_MetaNodePerBlock",
+        "name": "_YYPerBlock",
         "type": "uint256"
       }
     ],
-    "name": "setMetaNodePerBlock",
+    "name": "setYYPerBlock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1271,12 +1271,12 @@ export const stakeAbi = [
       },
       {
         "internalType": "uint256",
-        "name": "finishedMetaNode",
+        "name": "finishedYY",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "pendingMetaNode",
+        "name": "pendingYY",
         "type": "uint256"
       }
     ],
