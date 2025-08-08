@@ -101,7 +101,7 @@ const Home = () => {
       console.log('Contract address:', stakeContract.address);
       console.log('Wallet address:', address);
       
-      const tx = await stakeContract.write.claimReward();
+      const tx = await stakeContract.write.claim([Pid]);
       console.log('Claim transaction hash:', tx);
       
       const res = await waitForTransactionReceipt(data, { hash: tx });
