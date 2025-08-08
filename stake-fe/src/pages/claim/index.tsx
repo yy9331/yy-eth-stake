@@ -55,7 +55,7 @@ const Claim = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-12 relative z-10"
+        className="text-center mb-12 relative z-10 pt-12"
       >
         <div className="inline-block mb-4">
           <motion.div
@@ -237,6 +237,9 @@ const Claim = () => {
           </div>
         </div>
       </motion.div>
+      
+      {/* 底部间距 */}
+      <div className="h-20"></div>
     </div>
   );
 };

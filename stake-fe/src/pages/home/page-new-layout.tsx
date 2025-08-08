@@ -129,7 +129,7 @@ const Home = () => {
       {/* 主要内容区域 */}
       <div className="relative z-10">
         {/* 顶部英雄区域 */}
-        <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+        <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             {/* Logo 和标题 */}
             <motion.div

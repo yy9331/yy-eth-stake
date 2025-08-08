@@ -127,7 +127,7 @@ const Withdraw = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-12 relative z-10"
+        className="text-center mb-12 relative z-10 pt-12"
       >
         <h1 className="text-5xl font-bold bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent mb-4">
           Withdraw
@@ -254,6 +254,9 @@ const Withdraw = () => {
           </motion.button>
         </div>
       </motion.div>
+      
+      {/* 底部间距 */}
+      <div className="h-20"></div>
     </div>
   );
 };

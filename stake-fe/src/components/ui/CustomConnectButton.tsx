@@ -41,7 +41,7 @@ export const CustomConnectButton = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={openConnectModal}
                     type="button"
-                    className="w-full flex items-center justify-center space-x-2 cute-button"
+                    className="px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     Connect Wallet
                   </motion.button>
@@ -55,7 +55,7 @@ export const CustomConnectButton = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={openChainModal}
                     type="button"
-                    className="w-full flex items-center justify-center space-x-2 cute-button"
+                    className="px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     Wrong network
                   </motion.button>
@@ -70,7 +70,7 @@ export const CustomConnectButton = () => {
                     onClick={openChainModal}
                     style={{ display: "flex", alignItems: "center" }}
                     type="button"
-                    className="cute-button py-2 px-4"
+                    className="px-4 py-2 bg-gray-700/80 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     {chain.hasIcon && (
                       <div
@@ -102,7 +102,7 @@ export const CustomConnectButton = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={openAccountModal}
                     type="button"
-                    className="cute-button py-2 px-4"
+                    className="px-4 py-2 bg-gray-700/80 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     {account.displayName}
                     {account.displayBalance

@@ -1,25 +1,46 @@
 import { ReactNode } from "react";
-import Header from "./Header";
 import TechBackground from "./TechBackground";
+import Sidebar from "./Sidebar";
+import WalletConnectButton from "./WalletConnectButton";
 import { motion } from "framer-motion";
 import { FiGithub, FiTwitter } from 'react-icons/fi';
+import { useAccount, useBalance } from "wagmi";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const { address, isConnected } = useAccount();
+  const { data: balance } = useBalance({
+    address: address,
+    query: {
+      enabled: isConnected,
+      refetchInterval: 10000,
+      refetchIntervalInBackground: false,
+    }
+  });
+
   return (
     <TechBackground>
       <div className="min-h-screen flex flex-col">
+        {/* 侧边栏 */}
+        <Sidebar 
+          isConnected={isConnected}
+          address={address}
+          balance={balance?.formatted}
+        />
+        
+        {/* 钱包连接按钮 */}
+        <WalletConnectButton />
+        
         {/* Content */}
         <div className="relative flex flex-col flex-grow">
-          <Header />
           <motion.main
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex-grow max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8"
+            className="flex-grow"
           >
             {children}
           </motion.main>
