@@ -14,10 +14,11 @@
   
   /* 暗色主题背景 */
   .dark body {
+    @apply bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800;
     background-image: 
-      radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(251, 146, 60, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.02) 0%, transparent 50%);
+      radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(251, 146, 60, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.04) 0%, transparent 50%);
   }
 
   /* 暗色主题下的文本颜色 */
@@ -28,101 +29,237 @@
   .dark p, .dark span {
     @apply text-gray-300;
   }
+
+  /* 暗色主题下的标签和输入框 */
+  .dark label {
+    @apply text-gray-300;
+  }
+
+  .dark input {
+    @apply text-gray-200 bg-gray-800/60 border-gray-600;
+  }
+
+  .dark input::placeholder {
+    @apply text-gray-500;
+  }
 }
 
 @layer components {
-  .btn-primary {
-    @apply px-6 py-3 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl 
-           hover:from-red-500 hover:to-orange-600 transition-all duration-300 ease-in-out 
-           shadow-lg hover:shadow-red-500/25 relative overflow-hidden font-semibold;
+  /* 科技感背景系统 */
+  .tech-background {
+    @apply relative overflow-hidden;
   }
 
-  .btn-primary::before {
-    content: "";
+  .tech-background::before {
+    content: '';
+    @apply absolute inset-0 opacity-20;
+    background-image: 
+      linear-gradient(90deg, transparent 98%, rgba(239, 68, 68, 0.3) 100%),
+      linear-gradient(0deg, transparent 98%, rgba(251, 146, 60, 0.3) 100%);
+    background-size: 50px 50px;
+    animation: grid-move 30s linear infinite;
+  }
+
+  .tech-background::after {
+    content: '';
+    @apply absolute inset-0;
+    background: 
+      radial-gradient(circle at 30% 20%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba(251, 146, 60, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .dark .tech-background::before {
+    opacity: 0.08;
+    background-image: 
+      linear-gradient(90deg, transparent 98%, rgba(239, 68, 68, 0.15) 100%),
+      linear-gradient(0deg, transparent 98%, rgba(251, 146, 60, 0.15) 100%);
+  }
+
+  .dark .tech-background::after {
+    background: 
+      radial-gradient(circle at 30% 20%, rgba(239, 68, 68, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba(251, 146, 60, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.02) 0%, transparent 50%);
+  }
+
+  /* 玻璃拟态效果 */
+  .glass-morphism {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.37),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .glass-morphism {
+    background-color: rgba(31, 41, 55, 0.9);
+    border-color: rgba(107, 114, 128, 0.4);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.6),
+      0 4px 16px 0 rgba(239, 68, 68, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-card {
+    @apply glass-morphism rounded-3xl p-8 transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 
+      0 12px 40px 0 rgba(31, 38, 135, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .dark .glass-card:hover {
+    background-color: rgba(17, 24, 39, 0.9);
+    box-shadow: 
+      0 12px 40px 0 rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* 火焰按钮样式 */
+  .flame-button {
+    @apply px-6 py-3 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl 
+           hover:from-red-500 hover:to-orange-600 transition-all duration-300 ease-in-out 
+           shadow-lg hover:shadow-red-500/30 font-semibold border-2 border-white/20
+           hover:transform hover:-translate-y-1 relative overflow-hidden;
+  }
+
+  .flame-button::before {
+    content: '';
     @apply absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0;
     transform: translateX(-100%);
     transition: transform 0.6s ease-in-out;
   }
 
-  .btn-primary:hover::before {
+  .flame-button:hover::before {
     transform: translateX(100%);
   }
 
-  .card {
-    @apply bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl 
-           border-2 border-pink-200/50 hover:border-pink-300/70
-           transition-all duration-300 ease-in-out p-8;
+  /* 科技卡片样式 */
+  .tech-card {
+    @apply glass-morphism rounded-3xl p-8 transition-all duration-300 relative overflow-hidden;
   }
 
-  .input-field {
-    @apply w-full px-4 py-3 bg-white/60 dark:bg-gray-800/60 border-2 border-red-200 dark:border-gray-600 rounded-2xl 
+  .dark .tech-card {
+    background-color: rgba(31, 41, 55, 0.9);
+    border: 2px solid rgba(107, 114, 128, 0.4);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.5),
+      0 4px 16px 0 rgba(239, 68, 68, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .tech-card:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 
+      0 12px 40px 0 rgba(31, 38, 135, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .dark .tech-card:hover {
+    background-color: rgba(31, 41, 55, 0.95);
+    box-shadow: 
+      0 12px 40px 0 rgba(0, 0, 0, 0.7),
+      0 4px 16px 0 rgba(239, 68, 68, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .tech-card::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-orange-500;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .tech-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  /* 输入框样式 */
+  .tech-input {
+    @apply w-full px-4 py-3 glass-morphism rounded-2xl 
            focus:ring-2 focus:ring-red-400 dark:focus:ring-red-400 focus:border-red-400 dark:focus:border-red-400
            outline-none transition-all duration-200 text-gray-800 dark:text-gray-200
            placeholder-gray-400 dark:placeholder-gray-500 font-medium;
   }
 
-  .tech-grid {
-    @apply absolute inset-0 opacity-10 pointer-events-none;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(239, 68, 68, 0.2) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(251, 146, 60, 0.2) 0%, transparent 50%);
-    animation: float 8s ease-in-out infinite;
+  .dark .tech-input {
+    background-color: rgba(31, 41, 55, 0.9);
+    border: 2px solid rgba(107, 114, 128, 0.4);
+    color: #e5e7eb;
+    box-shadow: 
+      0 4px 16px 0 rgba(0, 0, 0, 0.3),
+      0 2px 8px 0 rgba(239, 68, 68, 0.1);
   }
 
-  .glow {
+  .dark .tech-input::placeholder {
+    color: #6b7280;
+  }
+
+  /* 发光效果 */
+  .glow-effect {
     @apply relative;
   }
 
-  .glow::after {
+  .glow-effect::after {
     content: "";
     @apply absolute -inset-1 bg-gradient-to-r from-red-400 to-orange-500 
            rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-300;
     pointer-events: none;
   }
 
-  /* 暗色主题下的发光效果增强 */
-  .dark .glow::after {
+  .dark .glow-effect::after {
     @apply opacity-50 group-hover:opacity-100;
     filter: brightness(1.5);
   }
 
-  /* 火焰按钮样式 */
-  .cute-button {
-    @apply px-6 py-3 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl 
-           hover:from-red-500 hover:to-orange-600 transition-all duration-300 ease-in-out 
-           shadow-lg hover:shadow-red-500/30 font-semibold border-2 border-white/20
-           hover:transform hover:-translate-y-1;
+  /* 为圆形元素移除方形发光效果 */
+  .glow-effect.rounded-full::after {
+    border-radius: 9999px;
   }
 
-  /* 可爱卡片样式 */
-  .cute-card {
-    @apply bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl 
-           border-2 border-red-200/50 dark:border-gray-600/50 hover:border-red-300/70 dark:hover:border-gray-500/70
-           transition-all duration-300 ease-in-out p-8;
-    position: relative;
-    overflow: hidden;
+  /* 粒子效果 */
+  .particles {
+    @apply absolute inset-0 pointer-events-none;
   }
 
-  .cute-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.5s;
+  .particle {
+    @apply absolute w-1 h-1 bg-red-400 rounded-full opacity-60;
+    animation: particle-float 6s ease-in-out infinite;
   }
 
-  .cute-card:hover::before {
-    left: 100%;
+  .particle:nth-child(odd) {
+    @apply bg-orange-400;
+    animation-delay: -3s;
   }
 
-  .cute-card:hover {
-    @apply transform -translate-y-2 shadow-2xl;
+  .particle:nth-child(3n) {
+    @apply bg-yellow-400;
+    animation-delay: -1.5s;
   }
 
-  /* 科技感网格背景 */
+  /* 光束效果 */
+  .light-beam {
+    @apply absolute w-1 h-full bg-gradient-to-b from-transparent via-red-400/50 to-transparent;
+    animation: beam-sweep 8s ease-in-out infinite;
+  }
+
+  .light-beam:nth-child(2) {
+    animation-delay: -4s;
+  }
+
+  .light-beam:nth-child(3) {
+    animation-delay: -2s;
+  }
+
+  /* 科技网格背景 */
   .tech-grid {
     background-image: 
       linear-gradient(rgba(239, 68, 68, 0.1) 1px, transparent 1px),
@@ -141,6 +278,28 @@
     0% { transform: translate(0, 0); }
     100% { transform: translate(50px, 50px); }
   }
+
+  @keyframes particle-float {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateY(-20px) translateX(10px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes beam-sweep {
+    0%, 100% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(100vw);
+      opacity: 0.8;
+    }
+  }
 }
 
 /* 可爱滚动条样式 */
@@ -151,6 +310,10 @@
 
 ::-webkit-scrollbar-track {
   @apply bg-red-50 rounded-full;
+}
+
+.dark ::-webkit-scrollbar-track {
+  @apply bg-gray-800;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -230,12 +393,24 @@
 
 /* 可爱 react-toastify 样式 */
 .custom-toast {
-  @apply bg-gradient-to-br from-white via-pink-50 to-purple-50 border-2 border-pink-300/50 shadow-xl rounded-2xl text-gray-800 px-6 py-4 flex items-center backdrop-blur-lg;
+  @apply glass-morphism border-2 border-pink-300/50 shadow-xl rounded-2xl text-gray-800 px-6 py-4 flex items-center;
   box-shadow: 0 8px 32px 0 rgba(244, 114, 182, 0.2);
 }
+
+.dark .custom-toast {
+  @apply text-gray-200;
+  background-color: rgba(17, 24, 39, 0.9);
+  border-color: rgba(244, 114, 182, 0.3);
+}
+
 .custom-toast-body {
   @apply text-gray-800 font-semibold;
 }
+
+.dark .custom-toast-body {
+  @apply text-gray-200;
+}
+
 .custom-toast-progress {
   @apply bg-gradient-to-r from-pink-400 to-purple-500;
   box-shadow: 0 0 8px 2px rgba(244, 114, 182, 0.5);

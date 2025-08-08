@@ -33,9 +33,8 @@ const Header = () => {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b-2 border-red-200/50 dark:border-gray-700/50"
+      className="sticky top-0 z-50 glass-morphism border-b-2 border-red-200/50 dark:border-gray-700/50"
     >
-      <div className="absolute inset-0 tech-grid pointer-events-none" />
       <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         <div className="flex flex-wrap md:flex-nowrap justify-between items-center h-auto min-h-[56px] sm:min-h-[64px] py-2 gap-2 md:gap-0">
           <motion.div
@@ -79,10 +78,10 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-2 md:gap-4 mt-2 md:mt-0">
-                          <ThemeToggle />
-              <div className="min-w-[100px] sm:min-w-[120px]">
-                <CustomConnectButton />
-              </div>
+            <ThemeToggle />
+            <div className="min-w-[100px] sm:min-w-[120px]">
+              <CustomConnectButton />
+            </div>
             {/* Mobile menu button */}
             <button
               className="md:hidden p-1.5 sm:p-2 ml-1 rounded-lg hover:bg-red-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-red-500 transition-colors duration-200"
@@ -100,19 +99,19 @@ const Header = () => {
         animate={{ height: isMobileMenuOpen ? "auto" : 0 }}
         className="md:hidden overflow-hidden"
       >
-        <div className="px-3 sm:px-4 py-2 space-y-1 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t-2 border-red-200/50 dark:border-gray-700/50">
+        <div className="px-3 sm:px-4 py-2 space-y-1 glass-morphism border-t-2 border-red-200/50 dark:border-gray-700/50">
           {Links.map((link) => {
             const isActive = pathname === link.path || pathname === link.path + '/';
             return (
               <Link
                 key={link.name}
                 href={link.path}
-                                  className={cn(
-                    "block px-3 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200",
-                    isActive
-                      ? "bg-red-500/10 text-red-500"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-gray-800 hover:text-red-500"
-                  )}
+                className={cn(
+                  "block px-3 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200",
+                  isActive
+                    ? "bg-red-500/10 text-red-500"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-gray-800 hover:text-red-500"
+                )}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.name}
