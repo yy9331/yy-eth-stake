@@ -41,9 +41,10 @@ export const CustomConnectButton = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={openConnectModal}
                     type="button"
-                    className="px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="px-3 sm:px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-sm sm:text-base font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap"
                   >
-                    Connect Wallet
+                    <span className="hidden sm:inline">Connect Wallet</span>
+                    <span className="sm:hidden">Connect</span>
                   </motion.button>
                 );
               }
@@ -55,59 +56,63 @@ export const CustomConnectButton = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={openChainModal}
                     type="button"
-                    className="px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="px-3 sm:px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-sm sm:text-base font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap"
                   >
-                    Wrong network
+                    <span className="hidden sm:inline">Wrong network</span>
+                    <span className="sm:hidden">Network</span>
                   </motion.button>
                 );
               }
 
               return (
-                <div style={{ display: "flex", gap: 12 }}>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                  {/* 网络选择按钮 - 移动端优化 */}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={openChainModal}
-                    style={{ display: "flex", alignItems: "center" }}
-                    type="button"
-                    className="px-4 py-2 bg-gray-700/80 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-700/80 text-white text-sm sm:text-base font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap"
                   >
                     {chain.hasIcon && (
                       <div
+                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full overflow-hidden mr-2"
                         style={{
                           background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
-                          borderRadius: 999,
-                          overflow: "hidden",
-                          marginRight: 4,
                         }}
                       >
                         {chain.iconUrl && (
                           <Image
                             alt={chain.name ?? "Chain icon"}
                             src={chain.iconUrl}
-                            width={12}
-                            height={12}
-                            style={{ width: 12, height: 12 }}
+                            width={16}
+                            height={16}
+                            className="w-full h-full object-cover"
                           />
                         )}
                       </div>
                     )}
-                    {chain.name}
+                    <span className="hidden sm:inline">{chain.name}</span>
+                    <span className="sm:hidden">Chain</span>
                   </motion.button>
 
+                  {/* 账户按钮 - 移动端优化 */}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={openAccountModal}
-                    type="button"
-                    className="px-4 py-2 bg-gray-700/80 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="px-3 sm:px-4 py-2 bg-gray-700/80 text-white text-sm sm:text-base font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap"
                   >
-                    {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
+                    <span className="hidden sm:inline">
+                      {account.displayName}
+                      {account.displayBalance
+                        ? ` (${account.displayBalance})`
+                        : ""}
+                    </span>
+                    <span className="sm:hidden">
+                      {account.displayName.length > 8 
+                        ? `${account.displayName.slice(0, 6)}...` 
+                        : account.displayName}
+                    </span>
                   </motion.button>
                 </div>
               );

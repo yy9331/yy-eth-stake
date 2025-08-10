@@ -1,59 +1,59 @@
-import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
-import { cn } from '../../utils/cn';
+import React from "react";
+import { cn } from "../../utils/cn";
 
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  size?: "default" | "sm" | "lg" | "xl" | "mobile";
   loading?: boolean;
-  className?: string;
-  type?: 'button' | 'submit' | 'reset';
-  variant?: 'primary' | 'secondary' | 'outline';
   fullWidth?: boolean;
+  children: React.ReactNode;
 }
 
-export const Button = ({
-  children,
-  onClick,
-  disabled = false,
-  loading = false,
-  className,
-  type = 'button',
-  variant = 'primary',
-  fullWidth = false,
-}: ButtonProps) => {
-  const baseStyles = "flex items-center justify-center space-x-2 transition-all duration-300";
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "default", loading = false, fullWidth = false, children, ...props }, ref) => {
+    const baseClasses = "inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none";
+    
+    const variants = {
+      default: "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80",
+      destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80",
+      outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
+      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70",
+      ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
+      link: "text-primary underline-offset-4 hover:underline active:text-primary/80"
+    };
+    
+    const sizes = {
+      sm: "h-8 px-3 text-sm",
+      default: "h-10 px-4 text-base",
+      lg: "h-12 px-5 text-lg",
+      xl: "h-14 px-6 text-xl",
+      mobile: "h-12 px-4 text-base py-3 rounded-2xl"
+    };
+    
+    const mobileClasses = "touch-manipulation transform-gpu active:scale-[0.98] transition-transform duration-150";
+    
+    return (
+      <button
+        className={cn(
+          baseClasses,
+          variants[variant],
+          sizes[size],
+          mobileClasses,
+          fullWidth && "w-full",
+          className
+        )}
+        ref={ref}
+        {...props}
+      >
+        {loading && (
+          <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        )}
+        {children}
+      </button>
+    );
+  }
+);
 
-  const variants = {
-    primary: "bg-gradient-to-r from-red-400 to-orange-500 hover:from-red-500 hover:to-orange-600 text-white rounded-2xl px-6 py-3 font-semibold transition-all duration-300 ease-in-out shadow-lg hover:shadow-red-500/30 border-2 border-white/20",
-    secondary: "bg-gray-700 hover:bg-gray-600 text-white rounded-lg px-6 py-3",
-    outline: "border-2 border-red-500 text-red-500 hover:bg-red-500/10 rounded-lg px-6 py-3",
-  };
+Button.displayName = "Button";
 
-  return (
-    <motion.button
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={onClick}
-      disabled={disabled || loading}
-      type={type}
-      className={cn(
-        baseStyles,
-        variants[variant],
-        fullWidth && "w-full",
-        disabled && "opacity-70 cursor-not-allowed",
-        className
-      )}
-    >
-      {loading ? (
-        <>
-          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          <span>Processing...</span>
-        </>
-      ) : (
-        children
-      )}
-    </motion.button>
-  );
-}; 
+export default Button; 

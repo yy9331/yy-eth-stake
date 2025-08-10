@@ -54,6 +54,17 @@ const useRewards = () => {
         stTokenAddress: pool[0] as string
       });
     } catch (error) {
+      // 改进错误处理，避免 MetaMask 扩展错误
+      if (error instanceof Error && error.message.includes('Extension context invalidated')) {
+        console.warn('MetaMask extension context invalidated, retrying...');
+        // 延迟重试
+        setTimeout(() => {
+          if (stakeContract && address && isConnected) {
+            fetchPoolData();
+          }
+        }, 1000);
+        return;
+      }
       console.error('Failed to fetch pool data:', error);
     }
   }, [stakeContract, address, isConnected]);
@@ -68,6 +79,16 @@ const useRewards = () => {
       );
       setYYAddress(address as string);
     } catch (error) {
+      // 改进错误处理
+      if (error instanceof Error && error.message.includes('Extension context invalidated')) {
+        console.warn('MetaMask extension context invalidated, retrying...');
+        setTimeout(() => {
+          if (stakeContract) {
+            fetchYYAddress();
+          }
+        }, 1000);
+        return;
+      }
       console.error('Failed to fetch YY address:', error);
     }
   }, [stakeContract]);
@@ -95,6 +116,16 @@ const useRewards = () => {
         lastUpdate: Date.now()
       });
     } catch (error) {
+      // 改进错误处理
+      if (error instanceof Error && error.message.includes('Extension context invalidated')) {
+        console.warn('MetaMask extension context invalidated, retrying...');
+        setTimeout(() => {
+          if (stakeContract && address && isConnected) {
+            fetchRewardsData();
+          }
+        }, 1000);
+        return;
+      }
       console.error('Failed to fetch rewards data:', error);
       // 设置默认值
       setRewardsData({
@@ -142,6 +173,11 @@ const useRewards = () => {
     try {
       return await addYYToMetaMask(yyAddress);
     } catch (error) {
+      // 改进错误处理
+      if (error instanceof Error && error.message.includes('Extension context invalidated')) {
+        console.warn('MetaMask extension context invalidated');
+        return false;
+      }
       console.error('添加YY到钱包失败:', error);
       return false;
     }

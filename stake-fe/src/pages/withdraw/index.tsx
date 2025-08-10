@@ -44,10 +44,10 @@ const Withdraw = () => {
         stakeContract.read.stakingBalance([Pid, address])
       );
       
-      // @ts-ignore
-      const [requestAmount, pendingWithdrawAmount] = await retryWithDelay(() => 
+      const result = await retryWithDelay(() => 
         stakeContract.read.withdrawAmount([Pid, address])
       );
+      const [requestAmount, pendingWithdrawAmount] = result as [bigint, bigint];
       
       const ava = Number(formatUnits(pendingWithdrawAmount, 18));
       const total = Number(formatUnits(requestAmount, 18));
@@ -123,16 +123,17 @@ const Withdraw = () => {
       {/* 科技元素背景 */}
       <TechElements className="z-0" />
       
+      {/* 增加顶部内边距，避免被固定元素遮挡 */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-12 relative z-10 pt-12"
+        className="text-center mb-12 relative z-10 pt-24 sm:pt-28 md:pt-32"
       >
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent mb-4">
+        <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent mb-4">
           Withdraw
         </h1>
-        <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">
+        <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg font-medium">
           🔥✨ Unstake and withdraw your ETH 🔥✨
         </p>
       </motion.div>

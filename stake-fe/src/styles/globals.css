@@ -415,3 +415,286 @@
   @apply bg-gradient-to-r from-pink-400 to-purple-500;
   box-shadow: 0 0 8px 2px rgba(244, 114, 182, 0.5);
 }
+
+/* 移动端优化样式 */
+@layer utilities {
+  /* 移动端按钮优化 */
+  .mobile-button {
+    @apply px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200;
+  }
+  
+  .mobile-button:active {
+    @apply scale-95;
+  }
+  
+  /* 移动端卡片优化 */
+  .mobile-card {
+    @apply p-4 rounded-2xl;
+  }
+  
+  .sm\:mobile-card {
+    @apply sm:p-6 sm:rounded-3xl;
+  }
+  
+  /* 移动端输入框优化 */
+  .mobile-input {
+    @apply text-base py-3 px-4;
+  }
+  
+  .sm\:mobile-input {
+    @apply sm:text-lg sm:py-4 sm:px-5;
+  }
+  
+  /* 移动端图标优化 */
+  .mobile-icon {
+    @apply w-5 h-5;
+  }
+  
+  .sm\:mobile-icon {
+    @apply sm:w-6 sm:h-6;
+  }
+  
+  .md\:mobile-icon {
+    @apply md:w-7 md:h-7;
+  }
+  
+  /* 移动端间距优化 */
+  .mobile-spacing {
+    @apply space-y-4;
+  }
+  
+  .sm\:mobile-spacing {
+    @apply sm:space-y-6;
+  }
+  
+  /* 移动端网格优化 */
+  .mobile-grid {
+    @apply grid-cols-1 gap-4;
+  }
+  
+  .sm\:mobile-grid {
+    @apply sm:grid-cols-2 sm:gap-6;
+  }
+  
+  .lg\:mobile-grid {
+    @apply lg:grid-cols-4 lg:gap-8;
+  }
+  
+  /* 移动端文本优化 */
+  .mobile-text-sm {
+    @apply text-xs;
+  }
+  
+  .sm\:mobile-text-sm {
+    @apply sm:text-sm;
+  }
+  
+  .mobile-text-base {
+    @apply text-sm;
+  }
+  
+  .sm\:mobile-text-base {
+    @apply sm:text-base;
+  }
+  
+  .mobile-text-lg {
+    @apply text-base;
+  }
+  
+  .sm\:mobile-text-lg {
+    @apply sm:text-lg;
+  }
+  
+  .mobile-text-xl {
+    @apply text-lg;
+  }
+  
+  .sm\:mobile-text-xl {
+    @apply sm:text-xl;
+  }
+  
+  .mobile-text-2xl {
+    @apply text-xl;
+  }
+  
+  .sm\:mobile-text-2xl {
+    @apply sm:text-2xl;
+  }
+  
+  .mobile-text-3xl {
+    @apply text-2xl;
+  }
+  
+  .sm\:mobile-text-3xl {
+    @apply sm:text-3xl;
+  }
+  
+  /* 移动端动画优化 */
+  .mobile-animate {
+    @apply transition-all duration-200;
+  }
+  
+  .mobile-hover {
+    @apply hover:scale-105 hover:shadow-lg;
+  }
+  
+  /* 移动端触摸优化 */
+  .touch-optimized {
+    @apply select-none touch-manipulation;
+  }
+  
+  /* 移动端滚动优化 */
+  .mobile-scroll {
+    @apply overflow-x-auto scrollbar-hide;
+  }
+  
+  /* 移动端阴影优化 */
+  .mobile-shadow {
+    @apply shadow-md;
+  }
+  
+  .sm\:mobile-shadow {
+    @apply sm:shadow-lg;
+  }
+  
+  .lg\:mobile-shadow {
+    @apply lg:shadow-xl;
+  }
+  
+  /* 移动端边框优化 */
+  .mobile-border {
+    @apply border-2;
+  }
+  
+  .sm\:mobile-border {
+    @apply sm:border-2;
+  }
+  
+  /* 移动端圆角优化 */
+  .mobile-rounded {
+    @apply rounded-2xl;
+  }
+  
+  .sm\:mobile-rounded {
+    @apply sm:rounded-3xl;
+  }
+  
+  /* 移动端透明度优化 */
+  .mobile-opacity {
+    @apply opacity-90;
+  }
+  
+  .mobile-opacity:hover {
+    @apply opacity-100;
+  }
+  
+  /* 移动端渐变优化 */
+  .mobile-gradient {
+    @apply bg-gradient-to-r from-red-500 to-orange-600;
+  }
+  
+  .mobile-gradient-text {
+    @apply bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent;
+  }
+  
+  /* 移动端响应式隐藏 */
+  .mobile-only {
+    @apply block;
+  }
+  
+  .sm\:mobile-only {
+    @apply sm:hidden;
+  }
+  
+  .desktop-only {
+    @apply hidden;
+  }
+  
+  .sm\:desktop-only {
+    @apply sm:block;
+  }
+  
+  /* 移动端布局优化 */
+  .mobile-container {
+    @apply px-4;
+  }
+  
+  .sm\:mobile-container {
+    @apply sm:px-6;
+  }
+  
+  .lg\:mobile-container {
+    @apply lg:px-8;
+  }
+  
+  .mobile-max-width {
+    @apply max-w-7xl mx-auto;
+  }
+  
+  /* 移动端间距系统 */
+  .mobile-gap {
+    @apply gap-4;
+  }
+  
+  .sm\:mobile-gap {
+    @apply sm:gap-6;
+  }
+  
+  .lg\:mobile-gap {
+    @apply lg:gap-8;
+  }
+  
+  .mobile-padding {
+    @apply p-4;
+  }
+  
+  .sm\:mobile-padding {
+    @apply sm:p-6;
+  }
+  
+  .lg\:mobile-padding {
+    @apply lg:p-8;
+  }
+  
+  .mobile-margin {
+    @apply m-4;
+  }
+  
+  .sm\:mobile-margin {
+    @apply sm:m-6;
+  }
+  
+  .lg\:mobile-margin {
+    @apply lg:m-8;
+  }
+}
+
+/* 移动端特殊效果 */
+@media (max-width: 640px) {
+  .mobile-special {
+    @apply transform scale-95;
+  }
+  
+  .mobile-special:hover {
+    @apply transform scale-100;
+  }
+}
+
+/* 移动端性能优化 */
+.mobile-performance {
+  @apply will-change-transform;
+}
+
+/* 移动端无障碍优化 */
+.mobile-accessibility {
+  @apply focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+}
+
+/* 移动端暗色主题优化 */
+.dark .mobile-dark {
+  @apply bg-gray-800/90 border-gray-600/50;
+}
+
+.dark .mobile-dark:hover {
+  @apply bg-gray-800/95 border-gray-600/70;
+}

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { CustomConnectButton } from "./ui/CustomConnectButton";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiMenu } from 'react-icons/fi';
+import { FiMenu, FiX } from 'react-icons/fi';
 import { RiFireLine } from "react-icons/ri";
 import { useState } from 'react';
 import { cn } from '../utils/cn';
@@ -35,22 +35,23 @@ const Header = () => {
       animate={{ y: 0 }}
       className="sticky top-0 z-50 glass-morphism border-b-2 border-red-200/50 dark:border-gray-700/50"
     >
-      <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-        <div className="flex flex-wrap md:flex-nowrap justify-between items-center h-auto min-h-[56px] sm:min-h-[64px] py-2 gap-2 md:gap-0">
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Logo 和标题 - 移动端优化 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col md:flex-row items-center md:space-x-2 text-center md:text-left"
+            className="flex items-center space-x-2 sm:space-x-3"
           >
-            <RiFireLine className="w-5 h-5 sm:w-6 sm:h-6 text-red-500 animate-pulse-slow mb-1 md:mb-0" />
-            <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-red-400 to-orange-600 bg-clip-text text-transparent leading-tight">
-              <span className="block md:inline">YY</span>
-              <span className="block md:inline"> Stake</span>
+            <RiFireLine className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-red-500 animate-pulse-slow" />
+            <Link href="/" className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-red-400 to-orange-600 bg-clip-text text-transparent">
+              <span className="hidden sm:inline">YY Stake</span>
+              <span className="sm:hidden">YY</span>
             </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+          <nav className="hidden lg:flex items-center space-x-8">
             {Links.map((link) => {
               const isActive = pathname === link.path || pathname === link.path + '/';
               return (
@@ -58,7 +59,7 @@ const Header = () => {
                   key={link.name}
                   href={link.path}
                   className={cn(
-                    "relative text-base lg:text-lg font-medium transition-all duration-300 group",
+                    "relative text-base font-medium transition-all duration-300 group",
                     isActive ? "text-red-500" : "text-gray-600 dark:text-gray-300 hover:text-red-500"
                   )}
                 >
@@ -77,29 +78,54 @@ const Header = () => {
             })}
           </nav>
 
-          <div className="flex items-center gap-2 md:gap-4 mt-2 md:mt-0">
-            <ThemeToggle />
-            <div className="min-w-[100px] sm:min-w-[120px]">
+          {/* 右侧按钮组 - 移动端完全重新设计 */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* 桌面端按钮组 */}
+            <div className="hidden md:flex items-center space-x-3">
+              <ThemeToggle />
               <CustomConnectButton />
             </div>
-            {/* Mobile menu button */}
+
+            {/* 移动端按钮组 - 重新设计布局 */}
+            <div className="md:hidden flex items-center space-x-2">
+              {/* 主题切换按钮 */}
+              <div className="scale-90">
+                <ThemeToggle />
+              </div>
+              
+              {/* 钱包连接按钮 - 移动端优化 */}
+              <div className="min-w-[70px] scale-90">
+                <CustomConnectButton />
+              </div>
+            </div>
+            
+            {/* 移动端菜单按钮 */}
             <button
-              className="md:hidden p-1.5 sm:p-2 ml-1 rounded-lg hover:bg-red-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-red-500 transition-colors duration-200"
+              className="md:hidden p-2 rounded-lg hover:bg-red-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-red-500 transition-colors duration-200"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
             >
-              <FiMenu className="w-5 h-5 sm:w-6 sm:h-6" />
+              {isMobileMenuOpen ? (
+                <FiX className="w-5 h-5" />
+              ) : (
+                <FiMenu className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - 完全重新设计 */}
       <motion.div
         initial={false}
-        animate={{ height: isMobileMenuOpen ? "auto" : 0 }}
-        className="md:hidden overflow-hidden"
+        animate={{ 
+          height: isMobileMenuOpen ? "auto" : 0,
+          opacity: isMobileMenuOpen ? 1 : 0
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="md:hidden overflow-hidden bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-t border-red-200/50 dark:border-gray-700/50"
       >
-        <div className="px-3 sm:px-4 py-2 space-y-1 glass-morphism border-t-2 border-red-200/50 dark:border-gray-700/50">
+        <div className="px-4 py-4 space-y-2">
           {Links.map((link) => {
             const isActive = pathname === link.path || pathname === link.path + '/';
             return (
@@ -107,10 +133,10 @@ const Header = () => {
                 key={link.name}
                 href={link.path}
                 className={cn(
-                  "block px-3 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200",
+                  "block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200",
                   isActive
-                    ? "bg-red-500/10 text-red-500"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-gray-800 hover:text-red-500"
+                    ? "bg-gradient-to-r from-red-500/10 to-orange-500/10 text-red-600 dark:text-red-400 border border-red-200/50 dark:border-red-500/50"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-800/50 hover:text-red-500"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
               >

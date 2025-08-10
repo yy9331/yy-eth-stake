@@ -40,7 +40,7 @@ export default function Layout({ children }: LayoutProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex-grow"
+            className="flex-grow pt-20 sm:pt-24 md:pt-28" // 增加顶部间距，避免被固定元素遮挡
           >
             {children}
           </motion.main>

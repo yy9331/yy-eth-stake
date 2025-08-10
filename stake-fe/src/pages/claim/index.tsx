@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { FiGift, FiInfo, FiTrendingUp, FiClock, FiHeart } from 'react-icons/fi';
 import { RiFireLine } from "react-icons/ri";
 import { cn } from '../../utils/cn';
-import { Button } from '../../components/ui/Button';
+import Button from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import TechElements from '../../components/TechElements';
 

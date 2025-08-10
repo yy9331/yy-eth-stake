@@ -12,12 +12,116 @@ import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import { ThemeProvider } from '../contexts/ThemeContext';
+import { useEffect } from 'react';
+import React from 'react';
 
-const client = new QueryClient();
+// 创建 QueryClient 并配置错误重试
+const client = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        // 如果是 MetaMask 扩展错误，不重试
+        if (error instanceof Error && error.message.includes('Extension context invalidated')) {
+          return false;
+        }
+        return failureCount < 3;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    },
+  },
+});
+
+// 错误边界组件
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    // 如果是 MetaMask 扩展错误，不显示错误边界
+    if (error.message.includes('Extension context invalidated')) {
+      return { hasError: false };
+    }
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // 如果是 MetaMask 扩展错误，只记录警告
+    if (error.message.includes('Extension context invalidated')) {
+      console.warn('MetaMask extension context invalidated:', errorInfo);
+      return;
+    }
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              出现了一些问题
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              请刷新页面重试
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              刷新页面
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
+  // 全局错误处理
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      // 如果是 MetaMask 扩展错误，只记录警告
+      if (event.error?.message?.includes('Extension context invalidated')) {
+        console.warn('MetaMask extension context invalidated:', event.error);
+        event.preventDefault();
+        return;
+      }
+      
+      // 其他错误正常处理
+      console.error('Global error:', event.error);
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // 如果是 MetaMask 扩展错误，只记录警告
+      if (event.reason?.message?.includes('Extension context invalidated')) {
+        console.warn('MetaMask extension context invalidated:', event.reason);
+        event.preventDefault();
+        return;
+      }
+      
+      // 其他错误正常处理
+      console.error('Unhandled promise rejection:', event.reason);
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
   return (
-    <>
+    <ErrorBoundary>
       <Head>
         <title>YY Stake</title>
         <meta
@@ -51,8 +155,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </WagmiProvider>
         </MuiThemeProvider>
       </ThemeProvider>
-    </>
-
+    </ErrorBoundary>
   );
 }
 

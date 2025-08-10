@@ -12,6 +12,12 @@ export async function retryWithDelay<T>(
     } catch (error) {
       lastError = error as Error;
       
+      // 如果是 MetaMask 扩展错误，直接抛出，不重试
+      if (error instanceof Error && error.message.includes('Extension context invalidated')) {
+        console.warn('MetaMask extension context invalidated, skipping retry');
+        throw error;
+      }
+      
       // 如果是429错误，增加延迟时间
       if (error instanceof Error && error.message.includes('429')) {
         const backoffDelay = delay * Math.pow(2, i); // 指数退避

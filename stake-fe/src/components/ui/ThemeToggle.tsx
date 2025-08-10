@@ -11,7 +11,8 @@ export const ThemeToggle: React.FC = () => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       onClick={toggleTheme}
-      className="relative p-2 rounded-full bg-gradient-to-r from-red-100 to-orange-100 dark:from-gray-800 dark:to-gray-700 border-2 border-red-200 dark:border-gray-600 shadow-lg hover:shadow-xl transition-all duration-300"
+      className="relative p-1.5 sm:p-2 rounded-full bg-gradient-to-r from-red-100 to-orange-100 dark:from-gray-800 dark:to-gray-700 border-2 border-red-200 dark:border-gray-600 shadow-lg hover:shadow-xl transition-all duration-300"
+      aria-label="Toggle theme"
     >
       <motion.div
         initial={false}
@@ -20,9 +21,9 @@ export const ThemeToggle: React.FC = () => {
         className="relative"
       >
         {theme === 'light' ? (
-          <FiSun className="w-5 h-5 text-yellow-500" />
+          <FiSun className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
         ) : (
-          <FiMoon className="w-5 h-5 text-red-400" />
+          <FiMoon className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
         )}
       </motion.div>
       
